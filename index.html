@@ -462,6 +462,28 @@ button{background:none;border:none;cursor:pointer;padding:0}
 }
 .ov-pulse i.hi{background:linear-gradient(180deg,var(--focus-accent),var(--dim-top))}
 
+/* Lens-reactive panel · swaps content based on RIGHT edge */
+.ov-lens-panel{
+  margin-top:2px;padding-top:18px;border-top:1px solid var(--line-2);
+  min-height:64px;
+  font-family:var(--mono);font-size:10.5px;color:var(--ink-3);letter-spacing:.02em;line-height:1.7;
+  opacity:0;max-height:0;overflow:hidden;
+  transition:opacity var(--t-slow),max-height var(--t-slow);
+}
+.ov-lens-panel.on{opacity:1;max-height:280px}
+.ov-lens-panel code{font-family:var(--mono);color:var(--ink);background:rgba(26,24,19,.04);padding:1px 5px;border-radius:2px}
+.ov-lens-panel b{color:var(--ink);font-weight:500}
+.ov-lens-panel .row{display:grid;grid-template-columns:110px 1fr;gap:12px;padding:6px 0;border-bottom:1px dashed var(--line);align-items:baseline}
+.ov-lens-panel .row:last-child{border-bottom:none}
+.ov-lens-panel .row .k{color:var(--ink-4);letter-spacing:.14em;text-transform:uppercase;font-size:9.5px}
+.ov-lens-panel .row .v{color:var(--ink);font-variant-numeric:tabular-nums}
+.ov-lens-panel .export-row{display:flex;gap:10px;margin-top:8px;flex-wrap:wrap}
+.ov-lens-panel .export-btn{
+  padding:7px 14px;background:var(--ink);color:var(--bg-paper);font-family:var(--mono);font-size:10px;
+  letter-spacing:.1em;text-transform:uppercase;border-radius:2px;cursor:pointer;transition:background var(--t-fast);
+}
+.ov-lens-panel .export-btn:hover{background:var(--dim-top)}
+
 /* ==================== VIEW · PROFIL ==================== */
 .profile-view{
   display:grid;
@@ -828,27 +850,23 @@ button{background:none;border:none;cursor:pointer;padding:0}
           </div>
 
           <div class="score-block">
-            <div class="score-big">77</div>
+            <div class="score-big" id="ov-score">77</div>
             <div class="score-meta">
-              <div class="lb">Einzeiler</div>
-              <div class="val">Dein Rhythmus ist stabil · in 3 von 5 Posts dieser Woche zieht eine klare Signatur durch.</div>
-              <div class="delta">+4 ggü. letzter Woche</div>
+              <div class="lb" id="ov-lb">Einzeiler</div>
+              <div class="val" id="ov-val">Dein Rhythmus ist stabil · in 3 von 5 Posts dieser Woche zieht eine klare Signatur durch.</div>
+              <div class="delta" id="ov-delta">+4 ggü. letzter Woche</div>
             </div>
           </div>
 
-          <div class="ov-grid">
-            <div class="cell"><div class="lb">Konsistenz</div><div class="big">82</div><div class="sub">Signatur stabil</div></div>
-            <div class="cell"><div class="lb">Rhythmus</div><div class="big">71</div><div class="sub">leicht unter Base</div></div>
-            <div class="cell"><div class="lb">Kongruenz</div><div class="big">78</div><div class="sub">Profil ↔ Content</div></div>
+          <div class="ov-grid" id="ov-grid">
+            <div class="cell"><div class="lb">Konsistenz</div><div class="big" data-k="K">82</div><div class="sub">Signatur stabil</div></div>
+            <div class="cell"><div class="lb">Rhythmus</div><div class="big" data-k="R">71</div><div class="sub">leicht unter Base</div></div>
+            <div class="cell"><div class="lb">Kongruenz</div><div class="big" data-k="S">78</div><div class="sub">Profil ↔ Content</div></div>
           </div>
 
-          <div class="ov-pulse">
-            <i style="height:40%"></i><i style="height:62%"></i><i style="height:32%"></i>
-            <i style="height:78%"></i><i class="hi" style="height:68%"></i><i style="height:50%"></i>
-            <i style="height:38%"></i><i class="hi" style="height:74%"></i><i style="height:60%"></i>
-            <i style="height:52%"></i><i class="hi" style="height:84%"></i><i style="height:28%"></i>
-            <i style="height:66%"></i><i class="hi" style="height:78%"></i>
-          </div>
+          <div class="ov-pulse" id="ov-pulse"></div>
+
+          <div class="ov-lens-panel" id="ov-lens-panel"></div>
         </div>
 
       </div>
@@ -1099,6 +1117,15 @@ button{background:none;border:none;cursor:pointer;padding:0}
   const DETAIL_NAMES={S:'Signal-Lens',E:'Erklär-Lens',R:'Roh-Daten',X:'Export-Lens'};
   const ACTION_NAMES={draft:'Draft prüfen',rewrite:'Rewrite-Vorschlag',export:'Export starten',metime:'Me-Time aktivieren'};
 
+  // Time-reactive mock data · different snapshot per time range
+  const TIME_DATA={
+    H:  {score:71,K:78,R:62,S:74,delta:'heute gemessen',one:'Heute nur 1 Post · zu wenig Datenpunkte für Rhythmus-Signal.',pulse:[0,0,0,0,0,0,0,0,0,0,0,0,0,68]},
+    "7T":{score:73,K:79,R:68,S:76,delta:'−4 ggü. Vorwoche',one:'Letzte 7 Tage · 3 Posts · Rhythmus knapp unter Baseline, Konsistenz stabil.',pulse:[0,0,0,0,0,0,0,52,38,74,50,84,60,68]},
+    "14T":{score:77,K:82,R:71,S:78,delta:'+4 ggü. letzter Woche',one:'Dein Rhythmus ist stabil · in 3 von 5 Posts dieser Woche zieht eine klare Signatur durch.',pulse:[40,62,32,78,68,50,38,74,60,52,84,28,66,78]},
+    "30T":{score:74,K:80,R:70,S:75,delta:'+1 ggü. Vormonat',one:'Letzte 30 Tage · 12 Posts · Signatur bleibt erkennbar, mit zwei leisen Phasen.',pulse:[45,52,30,60,70,48,38,58,40,62,66,72,44,68,50,74,42,56,80,38,62,54,78,30,50,66,72,44,68,78]},
+    ALL:{score:72,K:78,R:69,S:74,delta:'über 97 Posts',one:'Seit Beta-Start: 97 Posts · deine Stimme ist erkennbar, aber mit einer Phase der Überproduktion im Januar.',pulse:[]},
+  };
+
   const ACCENT={profil:'var(--dim-top)',signal:'var(--dim-top)',feed:'var(--dim-top)',tools:'var(--dim-top)',param:'var(--dim-top)','0':'var(--ink)'};
 
   function setLayer(l){
@@ -1112,12 +1139,15 @@ button{background:none;border:none;cursor:pointer;padding:0}
     app.dataset.time=t;
     times.forEach(x=>x.classList.toggle('active',x.dataset.time===t));
     filterFeedByTime(t);
+    applyTimeToOverview(t);
+    applyTimeToSignal(t);
     updateMicro();
     updateBreadcrumb();
   }
   function setDetail(d){
     app.dataset.detail=d;
     details.forEach(x=>x.classList.toggle('active',x.dataset.detail===d));
+    applyDetailLens(d);
     updateMicro();
   }
   function setAction(a){
@@ -1135,7 +1165,8 @@ button{background:none;border:none;cursor:pointer;padding:0}
 
   function updateMicro(){
     const l=app.dataset.layer,t=app.dataset.time,d=app.dataset.detail,a=app.dataset.action;
-    if(l==='0'&&!a){micro.classList.remove('on');micro.innerHTML='';return}
+    const atDefault=(l==='0'&&t==='14T'&&d==='S'&&!a);
+    if(atDefault){micro.classList.remove('on');micro.innerHTML='';return}
     let parts=[];
     if(l!=='0')parts.push(`<b>ebene</b> ${LAYER_NAMES[l]}`);
     if(t!=='14T')parts.push(`<b>zeit</b> ${TIME_NAMES[t]}`);
@@ -1143,6 +1174,84 @@ button{background:none;border:none;cursor:pointer;padding:0}
     if(a)parts.push(`<b>aktion</b> ${ACTION_NAMES[a]}`);
     micro.innerHTML='Du siehst · '+parts.join(' · ');
     micro.classList.add('on');
+  }
+
+  function applyTimeToOverview(t){
+    const data=TIME_DATA[t]||TIME_DATA['14T'];
+    const el=id=>document.getElementById(id);
+    if(el('ov-score'))el('ov-score').textContent=data.score;
+    if(el('ov-val'))el('ov-val').textContent=data.one;
+    if(el('ov-delta'))el('ov-delta').textContent=data.delta;
+    document.querySelectorAll('#ov-grid [data-k]').forEach(n=>{
+      const k=n.dataset.k;if(data[k]!==undefined)n.textContent=data[k];
+    });
+    // Redraw pulse
+    const pulse=el('ov-pulse');if(pulse){
+      const bars=data.pulse&&data.pulse.length?data.pulse:[40,62,32,78,68,50,38,74,60,52,84,28,66,78];
+      const hiIdx=new Set([4,7,10,13]);
+      pulse.innerHTML=bars.map((h,i)=>{
+        if(h===0)return '<i style="height:2%;opacity:.25"></i>';
+        return `<i class="${hiIdx.has(i)&&h>0?'hi':''}" style="height:${Math.max(4,h)}%"></i>`;
+      }).join('');
+    }
+  }
+
+  function applyTimeToSignal(t){
+    const data=TIME_DATA[t]||TIME_DATA['14T'];
+    const rows=document.querySelectorAll('.signal-breakdown .sb-row');
+    // Simple: map K R Timing S → 4 rows in order
+    const vals=[data.K,data.R,data.S,Math.round((data.K+data.R+data.S)/3-2)];
+    rows.forEach((row,i)=>{
+      const bar=row.querySelector('.bar');
+      const v=row.querySelector('.v');
+      if(bar&&vals[i]!==undefined)bar.style.setProperty('--w',vals[i]+'%');
+      if(v&&vals[i]!==undefined)v.textContent=vals[i];
+    });
+    const big=document.querySelector('.signal-dial-big .big');
+    if(big)big.textContent=data.score;
+    const one=document.querySelector('.signal-oneline');
+    if(one)one.textContent=data.one;
+    // SVG dash offset: total 276.46, filled = score%
+    const arc=document.querySelector('.signal-dial-big svg circle:nth-of-type(2)');
+    if(arc){const off=276.46*(1-data.score/100);arc.setAttribute('stroke-dashoffset',off.toFixed(2))}
+  }
+
+  function applyDetailLens(d){
+    const panel=document.getElementById('ov-lens-panel');
+    if(!panel)return;
+    if(d==='S'){panel.classList.remove('on');panel.innerHTML='';return}
+    let html='';
+    const t=app.dataset.time||'14T';
+    const data=TIME_DATA[t]||TIME_DATA['14T'];
+    if(d==='E'){
+      html=`
+        <div class="row"><span class="k">Formel</span><span class="v"><code>M = ⁴√(K · R · T · S)</code></span></div>
+        <div class="row"><span class="k">Inputs</span><span class="v">K=${data.K/100} · R=${data.R/100} · T=0.50 · S=${data.S/100}</span></div>
+        <div class="row"><span class="k">Flags</span><span class="v">1 Schatten-Muster (Kompensation) · 0 kritisch</span></div>
+        <div class="row"><span class="k">Parameter</span><span class="v">Rhythmus-Schärfe <b>0.72</b> · Zeitfenster <b>${TIME_NAMES[t]}</b> · Authority <b>AN</b></span></div>
+      `;
+    } else if(d==='R'){
+      html=`
+        <div class="row"><span class="k">Posts</span><span class="v">${t==='H'?1:t==='7T'?3:t==='14T'?6:t==='30T'?12:97}</span></div>
+        <div class="row"><span class="k">Score roh</span><span class="v">${data.score}.00</span></div>
+        <div class="row"><span class="k">K · R · S</span><span class="v">${data.K}.0 · ${data.R}.0 · ${data.S}.0</span></div>
+        <div class="row"><span class="k">Shadow-IDs</span><span class="v">[f7a9c2, d1b880] · 2 transformation-ids</span></div>
+        <div class="row"><span class="k">Session</span><span class="v">self-curator-${Date.now().toString(36)}</span></div>
+      `;
+    } else if(d==='X'){
+      html=`
+        <div class="row"><span class="k">Format</span><span class="v">JSON · PDF · CSV (alle drei parallel)</span></div>
+        <div class="row"><span class="k">Umfang</span><span class="v">${TIME_NAMES[t]} · alle Scores · Schatten-Flags · Parameter-Snapshot</span></div>
+        <div class="row"><span class="k">Privacy</span><span class="v">Zero-Knowledge für HD-Profil · kein Backup extern</span></div>
+        <div class="export-row">
+          <button class="export-btn">· JSON laden</button>
+          <button class="export-btn">· PDF erzeugen</button>
+          <button class="export-btn">· CSV laden</button>
+        </div>
+      `;
+    }
+    panel.innerHTML=html;
+    panel.classList.add('on');
   }
   function updateBreadcrumb(){
     const l=app.dataset.layer,t=app.dataset.time;
@@ -1168,6 +1277,9 @@ button{background:none;border:none;cursor:pointer;padding:0}
   times.forEach(t=>t.addEventListener('click',()=>setTime(t.dataset.time)));
   details.forEach(d=>d.addEventListener('click',()=>setDetail(d.dataset.detail)));
   actions.forEach(a=>a.addEventListener('click',()=>setAction(a.dataset.action)));
+
+  // Initial render
+  applyTimeToOverview('14T');
 
   document.addEventListener('click',e=>{
     if(e.target.dataset&&'goto'in e.target.dataset)setLayer(e.target.dataset.goto);
