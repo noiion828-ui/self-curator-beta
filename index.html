@@ -2,1207 +2,1231 @@
 <html lang="de">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Self-Curator · Creator-Werkstatt</title>
-<meta name="description" content="Deine Werkbank. HD-Profil, Signal-Dials, Feed-Stream, Parameter. Ein Werkzeug, keine App, kein Coach.">
-<meta property="og:title" content="Self-Curator · Creator-Werkstatt">
-<meta property="og:description" content="HD-Profil, Signal-Dials, Feed-Stream, Parameter. Radikal transparent.">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Self-Curator · Edge</title>
+<meta name="description" content="Ein Kreis. Vier Ränder. Ein Feed, der sich interpretiert je nachdem, welchen Rand du berührst.">
+<meta property="og:title" content="Self-Curator · Edge">
+<meta property="og:description" content="2035-Interface · Edge-Navigation · ein Feed, vier Lesearten.">
 <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
 <meta name="googlebot" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=JetBrains+Mono:wght@300;400;500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-/* =========================================================
-   COLOR SYSTEM · Warm Workshop Daylight
-   Inspired by: Need-for-Speed Garage · Arc.net · Linear
-   ========================================================= */
+/* ==========================================================================
+   SELF-CURATOR · v3 · Edge Interface · 2035
+   Based on 20-persona design panel · Dialektik-Aufhebung:
+   "Navigation als semantische Kristallisation" · 4 Edges als orthogonale Lenses
+   ========================================================================== */
+
 :root{
-  --bg-base:#f5efe4;           /* Cream · workshop daylight */
-  --bg-paper:#faf6ec;          /* Softer paper tone */
-  --bg-panel:#ffffff;          /* Pure white panels */
-  --bg-panel-tint:#f9f3e6;     /* Tinted panel for variation */
-  --bg-pegboard:#e8dfc9;       /* Pegboard / deeper cream */
-  --bg-dark:#1e1a14;           /* Tool-drawer dark */
+  /* Canvas */
+  --bg-paper:#f6f1e5;
+  --bg-paper-dim:#ede6d3;
+  --bg-deep:#1a1813;
+  --ink:#1a1813;
+  --ink-2:#4d4638;
+  --ink-3:#807867;
+  --ink-4:#b8b09a;
+  --ink-5:#dcd4bf;
+  --line:rgba(26,24,19,.06);
+  --line-2:rgba(26,24,19,.12);
+  --line-3:rgba(26,24,19,.20);
 
-  --ink-0:#1a1812;             /* Primary text · warm black */
-  --ink-1:#3d3730;             /* Secondary */
-  --ink-2:#6b6356;             /* Tertiary · muted */
-  --ink-3:#9d9587;             /* Hint */
-  --ink-4:#cec5b2;             /* Divider */
+  /* Semantic Dimension Colors (orthogonal = different hues at low saturation) */
+  --dim-top:#9c6d32;         /* Ebene · copper */
+  --dim-left:#3a6d6a;        /* Zeit · teal */
+  --dim-right:#8a5c7a;       /* Detail · plum */
+  --dim-bottom:#6d8a3a;      /* Action · moss */
 
-  --copper:#b4601f;            /* Oxidized copper · primary accent */
-  --copper-hot:#d6792c;        /* Hot copper · CTA */
-  --copper-bright:#eba14d;     /* Bright copper */
-  --copper-pale:#f2d9ba;       /* Copper glow */
+  /* Focus variable · set by edge-click */
+  --focus-edge:none;
+  --focus-accent:var(--dim-top);
 
-  --brass:#c9a25a;
-  --brass-pale:#f0e4ca;
+  /* Type */
+  --serif:"Fraunces","Iowan Old Style",Georgia,serif;
+  --sans:"Inter",-apple-system,"SF Pro Display","Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
 
-  --signal-green:#4a8f5d;      /* Healthy signal */
-  --signal-amber:#c98a2a;      /* Caution */
-  --signal-red:#b5482f;        /* Warning */
-  --signal-teal:#3a7d86;       /* Calm · HD-dimension */
-  --signal-violet:#8a5cb5;     /* Shadow-dimension */
+  /* Motion · gradual, not snappy */
+  --t-slow:600ms cubic-bezier(.22,.61,.36,1);
+  --t-med:380ms cubic-bezier(.22,.61,.36,1);
+  --t-fast:180ms cubic-bezier(.22,.61,.36,1);
 
-  --line:rgba(26,24,18,.08);
-  --line-strong:rgba(26,24,18,.16);
-  --shadow-soft:0 1px 2px rgba(26,24,18,.04),0 4px 20px rgba(26,24,18,.06);
-  --shadow-raised:0 2px 6px rgba(26,24,18,.08),0 12px 32px rgba(26,24,18,.10);
-  --shadow-deep:0 4px 12px rgba(26,24,18,.12),0 24px 64px rgba(26,24,18,.14);
-  --glow-copper:0 0 0 2px rgba(180,96,31,.10),0 10px 40px rgba(180,96,31,.15);
-
-  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
-  --sans:"Inter",-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Roboto,sans-serif;
-  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,"Courier New",monospace;
+  /* Sizing */
+  --edge-w:84px;
+  --edge-h:64px;
+  --edge-h-top:72px;
+  --gap:0;
 }
 
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{
-  background:var(--bg-base);
-  color:var(--ink-0);
-  font-family:var(--sans);
-  font-size:15px;
-  line-height:1.55;
-  -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
-}
+html,body{height:100%;overflow:hidden;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
 body{
   background:
-    radial-gradient(ellipse 800px 600px at 12% 8%, rgba(242,217,186,.45), transparent 60%),
-    radial-gradient(ellipse 900px 700px at 90% 110%, rgba(201,162,90,.14), transparent 65%),
-    linear-gradient(180deg, var(--bg-base) 0%, #ede4ce 100%);
-  min-height:100vh;
-  background-attachment:fixed;
+    radial-gradient(ellipse 1200px 900px at 50% 50%,#f9f4e7,transparent 70%),
+    linear-gradient(180deg,var(--bg-paper) 0%,#ebe3cc 100%);
+  color:var(--ink);
+  font-family:var(--sans);
+  font-size:14.5px;
+  line-height:1.55;
+  font-weight:400;
+  letter-spacing:-.002em;
+  user-select:none;
+}
+body.locked{overflow:hidden}
+
+button,input{font:inherit;color:inherit}
+button{background:none;border:none;cursor:pointer;padding:0}
+
+/* ============================================================
+   LAYOUT · CSS Grid · 3x3 with edges
+   ============================================================ */
+.app{
+  position:fixed;inset:0;
+  display:grid;
+  grid-template-columns:var(--edge-w) 1fr var(--edge-w);
+  grid-template-rows:var(--edge-h-top) 1fr var(--edge-h);
+  transition:background var(--t-slow);
 }
 
-/* subtle grid pegboard background overlay */
-body::before{
-  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
-  background-image:
-    radial-gradient(circle,rgba(26,24,18,.045) 1px,transparent 1.2px),
-    radial-gradient(circle,rgba(26,24,18,.045) 1px,transparent 1.2px);
-  background-size:32px 32px,32px 32px;
-  background-position:0 0,16px 16px;
-  opacity:.5;
-  mask-image:radial-gradient(ellipse at 50% 40%,black 30%,transparent 75%);
+.edge{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  z-index:10;
 }
 
-a{color:var(--copper);text-decoration:none;border-bottom:1px solid transparent;transition:border-color .2s}
-a:hover{border-bottom-color:var(--copper)}
-
-button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
-
-/* =========================================================
-   TYPE
-   ========================================================= */
-h1,h2,h3,h4{font-family:var(--serif);font-weight:600;letter-spacing:-.01em;color:var(--ink-0)}
-h1{font-size:clamp(2.2rem,4.2vw,3.4rem);line-height:1.05}
-h2{font-size:clamp(1.6rem,2.6vw,2.1rem);line-height:1.15}
-h3{font-size:1.1rem;line-height:1.3}
-.mono{font-family:var(--mono);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
-.label{font-family:var(--mono);font-size:.7rem;color:var(--ink-2);text-transform:uppercase;letter-spacing:.18em}
-
-/* =========================================================
-   LAYOUT
-   ========================================================= */
-.page{position:relative;z-index:1;max-width:1280px;margin:0 auto;padding:32px 36px 120px}
-@media(max-width:860px){.page{padding:20px 18px 80px}}
-
-/* ---------- TOP NAV · minimal ---------- */
-.topbar{
-  display:flex;align-items:center;gap:20px;
-  padding:14px 22px;
-  background:var(--bg-panel);
-  border:1px solid var(--line);
-  border-radius:14px;
-  box-shadow:var(--shadow-soft);
-  margin-bottom:34px;
+/* ============================================================
+   TOP EDGE · Ebene (what · primary)
+   ============================================================ */
+.edge-top{
+  grid-column:1/4;grid-row:1;
+  gap:0;
+  padding:0 22px;
+  border-bottom:1px solid var(--line-2);
+  background:linear-gradient(180deg,rgba(246,241,229,.92),rgba(246,241,229,.78));
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
 }
-.brand{display:flex;align-items:center;gap:10px;font-family:var(--serif);font-size:1rem;font-weight:700;color:var(--ink-0)}
-.brand-bulb{
-  width:14px;height:14px;border-radius:50%;
-  background:radial-gradient(circle at 35% 30%,#ffd98a,var(--copper) 70%);
-  box-shadow:0 0 12px rgba(214,121,44,.55),inset 0 -1px 2px rgba(0,0,0,.25);
-  animation:flicker 4s ease-in-out infinite;
+.logo{
+  display:flex;align-items:baseline;gap:9px;
+  font-family:var(--serif);font-size:15.5px;font-weight:500;
+  color:var(--ink);
+  margin-right:auto;
+  letter-spacing:-.01em;
+  cursor:pointer;
 }
-@keyframes flicker{0%,100%{box-shadow:0 0 12px rgba(214,121,44,.55),inset 0 -1px 2px rgba(0,0,0,.25)}50%{box-shadow:0 0 20px rgba(214,121,44,.75),inset 0 -1px 2px rgba(0,0,0,.25)}}
-.brand-sub{font-family:var(--mono);font-size:.72rem;color:var(--ink-2);margin-left:6px;font-weight:400;letter-spacing:.1em;text-transform:uppercase}
+.logo .dot{
+  width:7px;height:7px;border-radius:50%;
+  background:var(--ink);
+  transform:translateY(-1px);
+  transition:background var(--t-med);
+}
+.logo:hover .dot{background:var(--focus-accent)}
+.logo .sub{
+  font-family:var(--mono);font-size:9.5px;font-weight:400;
+  color:var(--ink-3);letter-spacing:.22em;text-transform:uppercase;
+}
 
-.crumbs{display:flex;gap:14px;font-family:var(--mono);font-size:.72rem;color:var(--ink-3);text-transform:uppercase;letter-spacing:.14em}
-.crumbs span.active{color:var(--copper)}
+.top-stack{
+  display:flex;align-items:center;gap:0;
+  flex:1;justify-content:center;
+  max-width:780px;
+}
+.layer{
+  flex:1;
+  padding:10px 4px 12px;
+  text-align:center;
+  font-family:var(--serif);
+  font-size:15px;
+  font-weight:400;
+  color:var(--ink-2);
+  letter-spacing:-.01em;
+  cursor:pointer;
+  position:relative;
+  transition:color var(--t-med);
+}
+.layer:hover{color:var(--ink)}
+.layer .num{
+  font-family:var(--mono);font-size:9px;font-weight:400;
+  color:var(--ink-4);
+  letter-spacing:.14em;
+  display:block;margin-bottom:2px;
+}
+.layer.active{color:var(--dim-top);font-weight:500}
+.layer.active::after{
+  content:"";position:absolute;left:18%;right:18%;bottom:-1px;height:1px;
+  background:var(--dim-top);
+}
+.layer[data-layer="0"].active{color:var(--ink)}
+.layer[data-layer="0"].active::after{background:var(--ink)}
 
-.session-pill{
+.top-right{
+  display:flex;align-items:center;gap:14px;
   margin-left:auto;
-  display:flex;align-items:center;gap:10px;
-  padding:7px 14px;border-radius:999px;
-  background:rgba(74,143,93,.10);color:var(--signal-green);
-  font-family:var(--mono);font-size:.74rem;letter-spacing:.08em
 }
-.session-pill .dot{width:7px;height:7px;border-radius:50%;background:var(--signal-green);box-shadow:0 0 8px var(--signal-green);animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
-
-.cta-main{
-  padding:10px 20px;border-radius:999px;
-  background:linear-gradient(180deg,var(--copper-bright),var(--copper));
-  color:#fff;font-weight:600;font-size:.92rem;
-  box-shadow:0 2px 8px rgba(180,96,31,.30);
-  transition:transform .14s,box-shadow .2s;
+.beta-pill{
+  font-family:var(--mono);font-size:10px;font-weight:400;
+  color:var(--ink-3);letter-spacing:.18em;text-transform:uppercase;
+  display:flex;align-items:center;gap:7px;
 }
-.cta-main:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(180,96,31,.4)}
-.cta-ghost{
-  padding:10px 18px;border-radius:999px;
-  background:transparent;color:var(--ink-1);
-  border:1px solid var(--line-strong);
-  font-weight:500;font-size:.92rem;
+.beta-pill::before{
+  content:"";width:6px;height:6px;border-radius:50%;
+  background:var(--dim-bottom);
+  box-shadow:0 0 6px var(--dim-bottom);
+  animation:breathe 3s ease-in-out infinite;
 }
-.cta-ghost:hover{border-color:var(--copper);color:var(--copper)}
-
-/* =========================================================
-   HERO · Workbench Interface
-   ========================================================= */
-.hero{
-  display:grid;
-  grid-template-columns:1.35fr 1fr;
-  gap:28px;
-  margin-bottom:80px;
-  align-items:start;
-}
-@media(max-width:1020px){.hero{grid-template-columns:1fr;gap:20px}}
-
-/* LEFT · The Workbench panel */
-.workbench{
-  position:relative;
-  background:var(--bg-panel);
-  border:1px solid var(--line);
-  border-radius:22px;
-  padding:26px;
-  box-shadow:var(--shadow-raised);
-  overflow:hidden;
-}
-.wb-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
-.wb-label .mono{color:var(--ink-2);font-size:.7rem;text-transform:uppercase;letter-spacing:.2em}
-.wb-label .stripe{
-  display:flex;gap:4px;
-}
-.wb-label .stripe i{width:22px;height:3px;border-radius:2px;background:var(--ink-4)}
-.wb-label .stripe i.a{background:var(--signal-green)}
-.wb-label .stripe i.b{background:var(--copper)}
-
-.wb-grid{
-  display:grid;
-  grid-template-columns:repeat(6,1fr);
-  grid-auto-rows:minmax(60px,auto);
-  gap:12px;
-}
-
-/* Profile card */
-.tile{
-  background:var(--bg-paper);
-  border:1px solid var(--line);
-  border-radius:14px;
-  padding:14px 16px;
-  position:relative;
-  overflow:hidden;
-  transition:transform .18s ease,box-shadow .18s ease;
-}
-.tile:hover{transform:translateY(-1px);box-shadow:var(--shadow-soft)}
-.tile .tile-corner{position:absolute;top:8px;right:10px;font-family:var(--mono);font-size:.62rem;color:var(--ink-3);letter-spacing:.12em;text-transform:uppercase}
-
-.tile-profile{grid-column:span 3;display:flex;align-items:center;gap:16px}
-.hd-emblem{
-  width:58px;height:58px;border-radius:50%;
-  background:conic-gradient(from 220deg,var(--signal-teal),var(--copper),var(--brass),var(--signal-teal));
-  position:relative;flex-shrink:0;
-  box-shadow:0 2px 10px rgba(58,125,134,.25);
-}
-.hd-emblem::after{
-  content:"";position:absolute;inset:6px;border-radius:50%;
-  background:var(--bg-paper);
-}
-.hd-emblem span{
-  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
-  font-family:var(--serif);font-weight:700;font-size:1.1rem;color:var(--ink-0);z-index:1
-}
-.tile-profile .meta{flex:1;min-width:0}
-.tile-profile .meta .name{font-family:var(--serif);font-weight:600;font-size:1.05rem;line-height:1.15}
-.tile-profile .meta .type{font-family:var(--mono);font-size:.76rem;color:var(--ink-2);margin-top:3px;letter-spacing:.05em}
-.tile-profile .meta .auth{font-size:.82rem;color:var(--copper);margin-top:4px;font-weight:500}
-
-/* SIGNAL score · big number */
-.tile-signal{grid-column:span 3;display:flex;gap:16px;align-items:center}
-.signal-ring{
-  --val:77;
-  width:78px;height:78px;border-radius:50%;flex-shrink:0;
-  background:
-    conic-gradient(var(--copper) calc(var(--val)*1%), var(--bg-pegboard) 0);
-  position:relative;
-}
-.signal-ring::after{
-  content:"";position:absolute;inset:6px;border-radius:50%;background:var(--bg-paper);
-  box-shadow:inset 0 1px 4px rgba(26,24,18,.08)
-}
-.signal-ring span{
-  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:1;
-  font-family:var(--serif);font-size:1.7rem;font-weight:700;color:var(--ink-0)
-}
-.tile-signal .txt{flex:1}
-.tile-signal .txt h3{font-size:.95rem;margin-bottom:4px}
-.tile-signal .txt p{font-size:.8rem;color:var(--ink-2);line-height:1.4}
-
-/* 3 Dials · 14D dimensions shrunk */
-.tile-dial{grid-column:span 2;display:flex;flex-direction:column;align-items:center;padding:18px 10px 16px;background:var(--bg-panel-tint);text-align:center;min-height:146px}
-.tile-dial .label{margin-bottom:8px;font-size:.62rem}
-.dial{
-  position:relative;width:70px;height:70px;border-radius:50%;
-  background:conic-gradient(from 135deg,var(--bg-pegboard) 0 270deg,transparent 270deg);
-  margin-bottom:10px;
-}
-.dial::after{
-  content:"";position:absolute;inset:4px;border-radius:50%;background:var(--bg-paper);
-  box-shadow:inset 0 1px 3px rgba(26,24,18,.1)
-}
-.dial .needle{
-  position:absolute;top:50%;left:50%;width:2px;height:28px;
-  background:var(--copper);transform-origin:bottom center;
+@keyframes breathe{0%,100%{opacity:1}50%{opacity:.4}}
+.cta{
+  padding:8px 16px 9px;
+  font-size:12px;letter-spacing:-.005em;font-weight:500;
+  color:var(--bg-paper);
+  background:var(--ink);
   border-radius:2px;
-  box-shadow:0 0 6px rgba(180,96,31,.5);
-  z-index:1;
-  transform:translate(-50%,-100%) rotate(calc(var(--deg,0deg)));
-  transition:transform .6s cubic-bezier(.2,.8,.2,1);
+  transition:background var(--t-fast),transform var(--t-fast);
 }
-.dial .cap{
-  position:absolute;top:50%;left:50%;width:10px;height:10px;border-radius:50%;
-  background:var(--copper);transform:translate(-50%,-50%);z-index:2;
-  box-shadow:0 0 0 2px var(--bg-paper),0 1px 2px rgba(0,0,0,.25)
-}
-.dial-tick{position:absolute;width:100%;height:100%;top:0;left:0;z-index:0}
-.dial-tick i{
-  position:absolute;top:50%;left:50%;width:2px;height:6px;background:var(--ink-4);
-  transform-origin:center 36px;
-  border-radius:1px;
-}
-.tile-dial .val{font-family:var(--serif);font-size:1.4rem;font-weight:700;color:var(--ink-0);line-height:1}
-.tile-dial .sub{font-family:var(--mono);font-size:.62rem;color:var(--ink-3);letter-spacing:.1em;text-transform:uppercase;margin-top:3px}
+.cta:hover{background:var(--dim-top);transform:translateY(-.5px)}
 
-/* Rhythm timeline */
-.tile-rhythm{grid-column:span 6;padding:16px 18px}
-.tile-rhythm .head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-.tile-rhythm .head h3{font-size:.95rem}
-.tile-rhythm .head .sub{font-family:var(--mono);font-size:.72rem;color:var(--ink-2)}
-.timeline{display:flex;gap:5px;height:42px;align-items:flex-end;position:relative}
-.timeline .bar{
-  flex:1;border-radius:3px 3px 2px 2px;
-  background:linear-gradient(180deg,var(--copper-pale),var(--brass-pale));
-  border-bottom:2px solid var(--copper);
-  min-height:6px;
+/* ============================================================
+   LEFT EDGE · Zeit (when)
+   ============================================================ */
+.edge-left{
+  grid-column:1;grid-row:2;
+  flex-direction:column;
+  border-right:1px solid var(--line-2);
+  padding:22px 0;
+  gap:8px;
+}
+.edge-left .edge-label{
+  font-family:var(--mono);font-size:9px;font-weight:400;
+  color:var(--ink-4);letter-spacing:.22em;text-transform:uppercase;
+  writing-mode:vertical-rl;transform:rotate(180deg);
+  margin-bottom:12px;
+  cursor:default;
+}
+.time-stack{
+  display:flex;flex-direction:column;align-items:center;gap:0;
+  flex:1;justify-content:flex-start;
+}
+.time{
+  width:100%;
+  padding:11px 0;
+  text-align:center;
+  font-family:var(--mono);font-size:10.5px;font-weight:400;
+  color:var(--ink-3);letter-spacing:.1em;
+  cursor:pointer;
   position:relative;
-  transition:transform .2s;
+  transition:color var(--t-med);
+  text-transform:uppercase;
 }
-.timeline .bar.active{background:linear-gradient(180deg,var(--copper-bright),var(--copper));border-bottom-color:var(--ink-0)}
-.timeline .bar:hover{transform:translateY(-2px)}
-.timeline .baseline{
-  position:absolute;left:0;right:0;top:50%;height:1px;
-  border-top:1px dashed var(--ink-3);
-  z-index:1;pointer-events:none;
+.time:hover{color:var(--ink)}
+.time.active{color:var(--dim-left);font-weight:500}
+.time.active::before{
+  content:"";position:absolute;left:-1px;top:20%;bottom:20%;width:1px;
+  background:var(--dim-left);
 }
-.tile-rhythm .axis{display:flex;justify-content:space-between;margin-top:8px;font-family:var(--mono);font-size:.64rem;color:var(--ink-3);letter-spacing:.08em}
 
-/* RIGHT · Claim */
-.claim h1{margin-bottom:20px}
-.claim h1 em{font-style:italic;color:var(--copper)}
-.claim .lede{font-size:1.1rem;color:var(--ink-1);margin-bottom:20px;max-width:480px;font-family:var(--serif);line-height:1.5}
-.claim .micro{font-family:var(--mono);font-size:.74rem;color:var(--ink-2);letter-spacing:.08em;margin-top:28px;line-height:1.8}
-.claim .micro b{color:var(--copper);font-weight:500}
-.claim .actionset{display:flex;gap:10px;margin-top:28px;flex-wrap:wrap}
-.big-cta{
-  padding:14px 26px;border-radius:12px;
-  background:linear-gradient(180deg,var(--copper-bright) 0%,var(--copper-hot) 50%,var(--copper) 100%);
-  color:#fff;font-weight:600;font-size:1rem;
-  box-shadow:0 4px 14px rgba(180,96,31,.28),inset 0 1px 0 rgba(255,255,255,.25);
-  transition:transform .14s,box-shadow .2s;
-  display:inline-flex;align-items:center;gap:10px;
+/* ============================================================
+   RIGHT EDGE · Detail (depth · context-reactive)
+   ============================================================ */
+.edge-right{
+  grid-column:3;grid-row:2;
+  flex-direction:column;
+  border-left:1px solid var(--line-2);
+  padding:22px 0;
+  gap:8px;
 }
-.big-cta:hover{transform:translateY(-2px);box-shadow:0 8px 26px rgba(180,96,31,.38),inset 0 1px 0 rgba(255,255,255,.3)}
-.big-cta .arrow{transition:transform .2s}
-.big-cta:hover .arrow{transform:translateX(3px)}
-.secondary-cta{
-  padding:14px 22px;border-radius:12px;
-  background:var(--bg-panel);color:var(--ink-0);
-  border:1px solid var(--line-strong);font-weight:500;font-size:.95rem;
+.edge-right .edge-label{
+  font-family:var(--mono);font-size:9px;font-weight:400;
+  color:var(--ink-4);letter-spacing:.22em;text-transform:uppercase;
+  writing-mode:vertical-rl;
+  margin-bottom:12px;
+  cursor:default;
 }
-.secondary-cta:hover{border-color:var(--copper);color:var(--copper)}
+.detail-stack{
+  display:flex;flex-direction:column;align-items:center;gap:0;
+  flex:1;justify-content:flex-start;
+}
+.detail{
+  width:100%;
+  padding:11px 0;
+  text-align:center;
+  font-family:var(--mono);font-size:10.5px;font-weight:400;
+  color:var(--ink-3);letter-spacing:.1em;
+  cursor:pointer;
+  position:relative;
+  transition:color var(--t-med);
+  text-transform:uppercase;
+}
+.detail:hover{color:var(--ink)}
+.detail.active{color:var(--dim-right);font-weight:500}
+.detail.active::before{
+  content:"";position:absolute;right:-1px;top:20%;bottom:20%;width:1px;
+  background:var(--dim-right);
+}
 
-/* =========================================================
-   TOOL-GRID · 9 Interface-Panels
-   ========================================================= */
-.section-head{display:flex;align-items:baseline;justify-content:space-between;margin:80px 0 26px;gap:20px;flex-wrap:wrap}
-.section-head h2{letter-spacing:-.015em}
-.section-head p{color:var(--ink-2);font-family:var(--mono);font-size:.78rem;letter-spacing:.06em;max-width:380px;text-align:right}
-@media(max-width:720px){.section-head p{text-align:left}}
+/* ============================================================
+   BOTTOM EDGE · Action (do)
+   ============================================================ */
+.edge-bottom{
+  grid-column:1/4;grid-row:3;
+  border-top:1px solid var(--line-2);
+  padding:0 22px;
+  gap:0;
+  background:linear-gradient(180deg,rgba(246,241,229,.78),rgba(246,241,229,.92));
+  backdrop-filter:blur(12px);
+}
+.breadcrumb{
+  font-family:var(--mono);font-size:10px;font-weight:400;
+  color:var(--ink-3);letter-spacing:.15em;text-transform:uppercase;
+  margin-right:auto;
+  display:flex;gap:10px;align-items:center;
+  padding:0 6px;
+}
+.breadcrumb .seg{cursor:pointer;transition:color var(--t-fast)}
+.breadcrumb .seg:hover{color:var(--ink)}
+.breadcrumb .sep{color:var(--ink-4)}
+.breadcrumb .current{color:var(--focus-accent);font-weight:500}
+.action-stack{
+  display:flex;align-items:center;gap:0;
+  max-width:640px;flex:0 1 auto;
+}
+.action{
+  padding:0 18px;
+  line-height:1;
+  font-family:var(--serif);font-size:13.5px;font-weight:400;
+  color:var(--ink-2);
+  cursor:pointer;
+  position:relative;
+  transition:color var(--t-med);
+  letter-spacing:-.005em;
+}
+.action:hover{color:var(--ink)}
+.action.active{color:var(--dim-bottom);font-weight:500}
+.action.active::after{
+  content:"";position:absolute;left:18px;right:18px;top:-1px;height:1px;
+  background:var(--dim-bottom);
+}
+.action-stack .sep{width:1px;height:14px;background:var(--line-2)}
+.bottom-right{
+  margin-left:auto;
+  display:flex;align-items:center;gap:14px;
+  font-family:var(--mono);font-size:10px;color:var(--ink-4);letter-spacing:.12em;
+}
+.bottom-right .kbd{
+  font-family:var(--mono);font-size:9.5px;
+  padding:2px 6px;border:1px solid var(--line-2);border-radius:2px;
+  color:var(--ink-3);
+}
 
-.toolgrid{
+/* ============================================================
+   CENTER · Stage (context-reactive content)
+   ============================================================ */
+.stage{
+  grid-column:2;grid-row:2;
+  position:relative;
+  overflow:hidden;
+  background:transparent;
+}
+.stage-micro{
+  position:absolute;top:16px;left:28px;right:28px;
+  font-family:var(--serif);font-size:12.5px;font-style:italic;font-weight:400;
+  color:var(--ink-3);
+  letter-spacing:.005em;
+  opacity:0;
+  transition:opacity var(--t-slow);
+  pointer-events:none;
+  z-index:5;
+}
+.stage-micro.on{opacity:.75}
+.stage-micro b{font-weight:500;color:var(--focus-accent);font-style:normal;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase}
+
+/* The content container · morphs via data-layer */
+.content{
+  position:absolute;inset:0;
+  padding:58px 42px 30px;
+  overflow:auto;
+  scrollbar-width:none;
+}
+.content::-webkit-scrollbar{display:none}
+@media(max-width:760px){.content{padding:52px 18px 20px}}
+
+.view{
+  position:absolute;inset:58px 42px 30px;
+  opacity:0;
+  transform:translateY(8px);
+  transition:opacity var(--t-slow),transform var(--t-slow);
+  pointer-events:none;
+  overflow:auto;
+  scrollbar-width:none;
+}
+.view::-webkit-scrollbar{display:none}
+.view.visible{opacity:1;transform:none;pointer-events:auto}
+@media(max-width:760px){.view{inset:52px 18px 20px}}
+
+/* ==================== VIEW · OVERVIEW (layer 0) ==================== */
+.ov{
+  display:grid;
+  grid-template-columns:1.3fr 1fr;
+  grid-template-rows:auto 1fr;
+  gap:34px 40px;
+  height:100%;
+  align-items:stretch;
+}
+@media(max-width:900px){.ov{grid-template-columns:1fr;grid-template-rows:auto auto 1fr}}
+
+.ov-claim{grid-column:1;grid-row:1/3;display:flex;flex-direction:column;justify-content:center;padding-right:10px;max-width:560px}
+.ov-claim .micro{
+  font-family:var(--mono);font-size:10px;color:var(--ink-3);letter-spacing:.22em;text-transform:uppercase;
+  margin-bottom:20px;
+}
+.ov-claim h1{
+  font-family:var(--serif);font-weight:300;
+  font-size:clamp(38px,5.5vw,62px);line-height:.98;
+  letter-spacing:-.02em;
+  color:var(--ink);
+  margin-bottom:22px;
+}
+.ov-claim h1 em{font-style:italic;font-weight:400;color:var(--dim-top)}
+.ov-claim p.lede{
+  font-family:var(--serif);font-size:16.5px;line-height:1.5;
+  color:var(--ink-2);max-width:470px;
+  margin-bottom:28px;
+  font-weight:400;
+}
+.ov-claim .hints{
+  display:flex;flex-direction:column;gap:4px;
+  font-family:var(--mono);font-size:10.5px;color:var(--ink-3);letter-spacing:.04em;
+  line-height:1.75;
+}
+.ov-claim .hints b{color:var(--ink);font-weight:500}
+.ov-claim .kbd-hint{
+  margin-top:24px;
+  font-family:var(--mono);font-size:10px;color:var(--ink-4);letter-spacing:.08em;
+}
+.ov-claim .kbd-hint .k{
+  display:inline-block;padding:1px 6px;margin:0 2px;
+  border:1px solid var(--line-2);border-radius:2px;
+  color:var(--ink-3);font-size:9.5px;
+}
+
+.ov-stage{
+  grid-column:2;grid-row:1/3;
+  display:grid;
+  grid-template-rows:auto auto 1fr;
+  gap:24px;
+  background:rgba(255,253,246,.5);
+  border:1px solid var(--line-2);
+  border-radius:3px;
+  padding:26px 28px;
+  position:relative;
+  overflow:hidden;
+}
+.ov-stage::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--focus-accent),transparent);
+  opacity:.5;
+}
+.ov-card-head{display:flex;justify-content:space-between;align-items:baseline}
+.ov-card-head .lbl{font-family:var(--mono);font-size:9px;color:var(--ink-4);letter-spacing:.22em;text-transform:uppercase}
+.ov-card-head .now{font-family:var(--mono);font-size:10px;color:var(--ink-3);letter-spacing:.1em}
+
+.score-block{display:flex;align-items:flex-end;gap:18px;border-bottom:1px solid var(--line-2);padding-bottom:22px}
+.score-big{
+  font-family:var(--serif);font-weight:300;
+  font-size:92px;line-height:.85;
+  color:var(--ink);letter-spacing:-.04em;
+}
+.score-meta{flex:1;padding-bottom:10px}
+.score-meta .lb{font-family:var(--mono);font-size:9px;color:var(--ink-3);letter-spacing:.2em;text-transform:uppercase;margin-bottom:5px}
+.score-meta .val{font-family:var(--serif);font-style:italic;font-size:14.5px;color:var(--ink-2);line-height:1.4}
+.score-meta .delta{font-family:var(--mono);font-size:10.5px;color:var(--dim-bottom);margin-top:5px;letter-spacing:.04em}
+
+.ov-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px 22px;margin-top:2px}
+.ov-grid .cell{min-width:0}
+.ov-grid .cell .lb{font-family:var(--mono);font-size:9px;color:var(--ink-4);letter-spacing:.2em;text-transform:uppercase;margin-bottom:4px}
+.ov-grid .cell .big{font-family:var(--serif);font-weight:400;font-size:28px;line-height:1;color:var(--ink);letter-spacing:-.02em}
+.ov-grid .cell .sub{font-family:var(--mono);font-size:9.5px;color:var(--ink-3);letter-spacing:.04em;margin-top:4px}
+
+.ov-pulse{
+  display:flex;align-items:flex-end;gap:3px;height:50px;padding-top:6px;
+  border-top:1px solid var(--line-2);
+}
+.ov-pulse i{
+  flex:1;
+  background:linear-gradient(180deg,var(--ink-5),var(--ink-4));
+  border-radius:.5px;
+  transition:background var(--t-med);
+}
+.ov-pulse i.hi{background:linear-gradient(180deg,var(--focus-accent),var(--dim-top))}
+
+/* ==================== VIEW · PROFIL ==================== */
+.profile-view{
+  display:grid;
+  grid-template-columns:280px 1fr;
+  gap:44px;
+  height:100%;align-content:start;
+}
+@media(max-width:760px){.profile-view{grid-template-columns:1fr}}
+.hd-sig{
+  display:flex;flex-direction:column;align-items:flex-start;gap:14px;
+}
+.hd-disc{
+  width:240px;height:240px;border-radius:50%;
+  background:
+    conic-gradient(from 200deg,
+      var(--dim-left) 0deg 80deg,
+      var(--dim-top) 80deg 160deg,
+      var(--dim-bottom) 160deg 260deg,
+      var(--dim-right) 260deg 360deg);
+  position:relative;
+  box-shadow:0 12px 36px rgba(26,24,19,.10);
+}
+.hd-disc::after{content:"";position:absolute;inset:16px;border-radius:50%;background:var(--bg-paper);box-shadow:inset 0 1px 3px rgba(0,0,0,.04)}
+.hd-disc .core{
+  position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:1;
+}
+.hd-disc .core .big{font-family:var(--serif);font-weight:400;font-size:52px;line-height:.9;color:var(--ink);letter-spacing:-.03em}
+.hd-disc .core .lb{font-family:var(--mono);font-size:10px;color:var(--ink-3);letter-spacing:.22em;text-transform:uppercase;margin-top:8px}
+.hd-sig .name{font-family:var(--serif);font-size:26px;font-weight:400;line-height:1.1;letter-spacing:-.015em;margin-top:4px}
+.hd-sig .sub{font-family:var(--mono);font-size:10.5px;color:var(--ink-3);letter-spacing:.16em;text-transform:uppercase}
+
+.hd-detail{font-family:var(--serif);font-size:16px;line-height:1.65;color:var(--ink-2);max-width:560px}
+.hd-detail h3{font-family:var(--serif);font-size:12px;font-weight:500;color:var(--ink);margin:24px 0 10px;letter-spacing:.14em;text-transform:uppercase;font-family:var(--mono);font-weight:400}
+.hd-detail h3:first-child{margin-top:0}
+.hd-detail .authority{
+  background:rgba(58,109,106,.06);
+  border-left:1px solid var(--dim-left);
+  padding:14px 18px;margin:10px 0 18px;
+  font-style:italic;
+}
+.hd-detail ul{list-style:none;padding:0;margin:10px 0}
+.hd-detail ul li{padding:6px 0;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;font-size:14px}
+.hd-detail ul li:last-child{border-bottom:none}
+.hd-detail ul li span{font-family:var(--mono);font-size:11px;color:var(--ink-3);letter-spacing:.06em}
+
+/* ==================== VIEW · SIGNAL ==================== */
+.signal-view{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:44px;
+  height:100%;align-content:start;
+}
+@media(max-width:820px){.signal-view{grid-template-columns:1fr}}
+.signal-main{display:flex;flex-direction:column;gap:18px}
+.signal-dial-big{
+  position:relative;width:100%;max-width:340px;aspect-ratio:1;margin:10px auto 0;
+}
+.signal-dial-big svg{width:100%;height:100%}
+.signal-dial-big .core{
+  position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+}
+.signal-dial-big .core .big{font-family:var(--serif);font-weight:300;font-size:88px;letter-spacing:-.04em;line-height:1;color:var(--ink)}
+.signal-dial-big .core .lb{font-family:var(--mono);font-size:10px;color:var(--ink-3);letter-spacing:.25em;text-transform:uppercase;margin-top:8px}
+.signal-oneline{
+  text-align:center;
+  font-family:var(--serif);font-style:italic;font-size:16px;color:var(--ink-2);max-width:380px;margin:0 auto;
+}
+.signal-breakdown{
+  display:flex;flex-direction:column;gap:14px;
+}
+.sb-head{font-family:var(--mono);font-size:10px;color:var(--ink-3);letter-spacing:.22em;text-transform:uppercase;margin-bottom:4px}
+.sb-row{
+  display:grid;
+  grid-template-columns:90px 1fr 40px;
+  gap:16px;align-items:center;
+  padding:14px 0;border-bottom:1px solid var(--line-2);
+}
+.sb-row:last-child{border-bottom:none}
+.sb-row .nm{font-family:var(--serif);font-size:15px;color:var(--ink)}
+.sb-row .bar{height:2px;background:var(--ink-5);border-radius:1px;position:relative;overflow:hidden}
+.sb-row .bar::after{
+  content:"";position:absolute;left:0;top:0;bottom:0;
+  background:var(--focus-accent);
+  width:var(--w,50%);
+  transition:width var(--t-slow);
+}
+.sb-row .v{font-family:var(--mono);font-size:13px;color:var(--ink);letter-spacing:-.01em;text-align:right;font-variant-numeric:tabular-nums}
+.sb-explain{
+  margin-top:18px;padding-top:18px;border-top:1px solid var(--line-2);
+  font-family:var(--mono);font-size:10.5px;color:var(--ink-3);line-height:1.7;letter-spacing:.02em;
+}
+.sb-explain code{color:var(--ink);background:rgba(26,24,19,.04);padding:1px 5px;border-radius:2px;font-family:var(--mono)}
+
+/* ==================== VIEW · FEED ==================== */
+.feed-view{
+  display:flex;flex-direction:column;gap:0;height:100%;
+}
+.feed-head{
+  display:flex;justify-content:space-between;align-items:baseline;
+  padding-bottom:16px;margin-bottom:16px;
+  border-bottom:1px solid var(--line-2);
+}
+.feed-head h2{font-family:var(--serif);font-size:24px;font-weight:400;letter-spacing:-.01em}
+.feed-head .count{font-family:var(--mono);font-size:10.5px;color:var(--ink-3);letter-spacing:.14em;text-transform:uppercase}
+.feed-items{
+  display:flex;flex-direction:column;gap:0;
+  overflow:auto;scrollbar-width:none;flex:1;
+}
+.feed-items::-webkit-scrollbar{display:none}
+.post{
+  padding:20px 0 22px;
+  border-bottom:1px solid var(--line-2);
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  gap:18px 20px;
+  align-items:start;
+  cursor:pointer;
+  transition:background var(--t-fast);
+}
+.post:hover{background:rgba(255,253,246,.5)}
+.post .p-when{
+  font-family:var(--mono);font-size:10px;color:var(--ink-3);letter-spacing:.12em;text-transform:uppercase;
+  padding-top:3px;min-width:72px;
+}
+.post .p-body{min-width:0}
+.post .p-text{font-family:var(--serif);font-size:16px;line-height:1.5;color:var(--ink);margin-bottom:9px}
+.post .p-meta{
+  display:flex;gap:14px;align-items:center;
+  font-family:var(--mono);font-size:10px;color:var(--ink-3);letter-spacing:.08em;
+}
+.post .p-meta .flag{color:var(--dim-right);font-style:italic;font-family:var(--serif);font-size:11.5px;letter-spacing:0}
+.post .p-state{
+  text-align:right;min-width:58px;
+  font-family:var(--mono);font-size:10.5px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;
+  padding-top:3px;
+}
+.post .p-state.go{color:var(--dim-bottom)}
+.post .p-state.refr{color:var(--dim-top)}
+.post .p-state.hold{color:var(--dim-right)}
+.post .p-state .score{display:block;font-size:18px;color:var(--ink);margin-top:1px;font-weight:300;letter-spacing:-.01em;font-family:var(--serif)}
+
+/* ==================== VIEW · TOOLS ==================== */
+.tools-view{
   display:grid;
   grid-template-columns:repeat(3,1fr);
   gap:14px;
+  height:100%;
+  align-content:start;
+  overflow:auto;
+  scrollbar-width:none;
 }
-@media(max-width:900px){.toolgrid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:560px){.toolgrid{grid-template-columns:1fr}}
-
+.tools-view::-webkit-scrollbar{display:none}
+@media(max-width:860px){.tools-view{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:540px){.tools-view{grid-template-columns:1fr}}
 .tool{
+  padding:22px 24px 24px;
+  background:rgba(255,253,246,.5);
+  border:1px solid var(--line-2);
+  border-radius:3px;
+  cursor:pointer;
   position:relative;
-  background:var(--bg-panel);
-  border:1px solid var(--line);
-  border-radius:16px;
-  padding:20px 22px 22px;
-  box-shadow:var(--shadow-soft);
-  transition:transform .22s cubic-bezier(.2,.8,.2,1),box-shadow .22s,border-color .22s;
-  overflow:hidden;
-  min-height:170px;
+  transition:background var(--t-med),border-color var(--t-med),transform var(--t-fast);
 }
-.tool:hover{transform:translateY(-3px);box-shadow:var(--shadow-raised);border-color:var(--copper-pale)}
-.tool::after{
-  content:"→";position:absolute;bottom:14px;right:16px;
-  color:var(--ink-3);font-size:1.15rem;transition:color .2s,transform .2s
+.tool:hover{background:rgba(255,253,246,1);border-color:var(--focus-accent);transform:translateY(-1px)}
+.tool .idx{
+  position:absolute;top:14px;right:16px;
+  font-family:var(--mono);font-size:9px;color:var(--ink-4);letter-spacing:.2em;
 }
-.tool:hover::after{color:var(--copper);transform:translateX(3px)}
-.tool .tool-icon{
-  display:flex;align-items:center;justify-content:center;
-  width:38px;height:38px;border-radius:10px;
-  background:var(--bg-panel-tint);border:1px solid var(--line);
-  font-family:var(--serif);font-weight:700;font-size:1.05rem;color:var(--copper);
-  margin-bottom:14px;
-}
-.tool h3{margin-bottom:8px;font-size:1.05rem}
-.tool p{font-size:.88rem;color:var(--ink-2);line-height:1.45;margin-bottom:12px}
-.tool .tool-meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
-.tool .chip{
-  font-family:var(--mono);font-size:.64rem;color:var(--ink-2);
-  padding:3px 8px;border-radius:6px;
-  background:var(--bg-panel-tint);border:1px solid var(--line);
-  text-transform:uppercase;letter-spacing:.1em
-}
-.tool .chip.live{background:rgba(74,143,93,.1);color:var(--signal-green);border-color:rgba(74,143,93,.25)}
-.tool .chip.soon{opacity:.7}
+.tool h3{font-family:var(--serif);font-size:17px;font-weight:400;color:var(--ink);margin-bottom:7px;letter-spacing:-.01em}
+.tool p{font-family:var(--serif);font-size:13.5px;line-height:1.5;color:var(--ink-2);margin-bottom:14px}
+.tool .chips{display:flex;gap:10px;flex-wrap:wrap;font-family:var(--mono);font-size:9.5px;color:var(--ink-3);letter-spacing:.1em;text-transform:uppercase}
+.tool .chips .live{color:var(--dim-bottom)}
+.tool .chips .soon{color:var(--ink-4)}
 
-.tool--featured{
-  background:linear-gradient(135deg,#fff9ed 0%,#fff5e0 100%);
-  border-color:var(--copper-pale);
+/* ==================== VIEW · PARAMETER ==================== */
+.param-view{
+  display:grid;grid-template-columns:1fr 1fr;gap:34px 44px;
+  align-content:start;height:100%;overflow:auto;scrollbar-width:none;
 }
-.tool--featured .tool-icon{background:var(--copper);color:#fff;border-color:transparent}
+.param-view::-webkit-scrollbar{display:none}
+@media(max-width:760px){.param-view{grid-template-columns:1fr}}
+.param{display:flex;flex-direction:column;gap:10px;padding-bottom:22px;border-bottom:1px solid var(--line-2)}
+.param .p-head{display:flex;justify-content:space-between;align-items:baseline}
+.param .p-name{font-family:var(--mono);font-size:10px;color:var(--ink-3);letter-spacing:.22em;text-transform:uppercase}
+.param .p-val{font-family:var(--serif);font-size:38px;font-weight:300;letter-spacing:-.02em;color:var(--ink);line-height:1}
+.param input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:18px;background:transparent;cursor:pointer;margin:4px 0}
+.param input[type=range]::-webkit-slider-runnable-track{height:1px;background:var(--ink-4);border-radius:0}
+.param input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:14px;height:14px;border-radius:50%;background:var(--ink);margin-top:-7px;transition:transform .15s}
+.param input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.3)}
+.param input[type=range]::-moz-range-track{height:1px;background:var(--ink-4)}
+.param input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;border:none;background:var(--ink)}
+.param .hint{font-family:var(--serif);font-size:13px;line-height:1.55;color:var(--ink-2);max-width:420px;font-style:italic}
 
-/* =========================================================
-   FEED · Scrollable Post-Stream Showcase
-   ========================================================= */
-.feedbox{
-  margin-top:40px;
-  background:var(--bg-panel);
-  border:1px solid var(--line);
-  border-radius:22px;
-  padding:30px 32px 32px;
-  box-shadow:var(--shadow-raised);
+/* ============================================================
+   WAITLIST MODAL
+   ============================================================ */
+#wl-modal{
+  position:fixed;inset:0;z-index:1000;
+  background:rgba(26,24,19,.55);
+  backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);
+  display:none;align-items:center;justify-content:center;
+  padding:20px;
 }
-.feedbox .fb-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:22px;gap:20px;flex-wrap:wrap}
-.feedbox h2{margin-bottom:6px}
-.feedbox .fb-sub{color:var(--ink-2);font-size:.95rem;max-width:560px}
-.feedbox .fb-controls{display:flex;gap:10px;flex-wrap:wrap}
-.fb-chip{
-  padding:6px 12px;border-radius:999px;
-  background:var(--bg-panel-tint);border:1px solid var(--line);
-  font-family:var(--mono);font-size:.72rem;color:var(--ink-1);
-  letter-spacing:.06em;cursor:pointer;
-  transition:background .15s,color .15s,border-color .15s;
-}
-.fb-chip:hover{background:var(--copper-pale);color:var(--copper);border-color:var(--copper-pale)}
-.fb-chip.active{background:var(--ink-0);color:#fff;border-color:var(--ink-0)}
-
-.feed{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:16px;
-  margin-top:10px;
-}
-@media(max-width:720px){.feed{grid-template-columns:1fr}}
-
-.post{
+#wl-modal.open{display:flex}
+.wl-card{
   background:var(--bg-paper);
-  border:1px solid var(--line);
-  border-radius:14px;
-  padding:18px 20px;
+  max-width:500px;width:100%;
+  padding:38px 40px 34px;
+  border:1px solid var(--line-3);
+  border-radius:3px;
+  box-shadow:0 24px 72px rgba(26,24,19,.3);
   position:relative;
-  transition:transform .2s,box-shadow .2s;
 }
-.post:hover{transform:translateY(-2px);box-shadow:var(--shadow-soft)}
-.post .phead{display:flex;align-items:center;gap:10px;margin-bottom:12px}
-.post .avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#dbbf88,#b48552);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-weight:600;font-size:.85rem;color:#fff}
-.post .who{font-size:.86rem;font-weight:500}
-.post .when{font-family:var(--mono);font-size:.68rem;color:var(--ink-3);margin-top:1px}
-.post .pstate{
-  margin-left:auto;padding:3px 10px;border-radius:999px;
-  font-family:var(--mono);font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;font-weight:500;
-}
-.post .pstate.ok{background:rgba(74,143,93,.12);color:var(--signal-green)}
-.post .pstate.warn{background:rgba(201,138,42,.14);color:var(--signal-amber)}
-.post .pstate.hold{background:rgba(181,72,47,.12);color:var(--signal-red)}
-.post .ptext{font-family:var(--serif);font-size:.96rem;color:var(--ink-0);line-height:1.5;margin-bottom:14px}
-.post .pmeta{
-  display:flex;gap:14px;align-items:center;
-  padding-top:12px;border-top:1px dashed var(--line);
-  font-family:var(--mono);font-size:.72rem;color:var(--ink-2);
-}
-.post .pmeta .score{
-  padding:4px 10px;border-radius:8px;font-weight:600;
-  background:var(--bg-panel);border:1px solid var(--line);color:var(--ink-0);
-  font-size:.78rem;
-}
-.post .pmeta .score b{color:var(--copper)}
-.post .pmeta .tag{padding:2px 8px;border-radius:6px;background:var(--bg-panel-tint);border:1px solid var(--line);letter-spacing:.06em}
-.post .shadow-note{margin-top:10px;font-size:.78rem;color:var(--signal-violet);font-family:var(--mono);letter-spacing:.02em;padding-top:10px;border-top:1px dashed rgba(138,92,181,.2)}
+.wl-close{position:absolute;top:14px;right:16px;font-family:var(--mono);font-size:18px;color:var(--ink-3);width:28px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.wl-close:hover{color:var(--ink)}
+.wl-card .eyebrow{font-family:var(--mono);font-size:10px;color:var(--ink-3);letter-spacing:.22em;text-transform:uppercase;margin-bottom:12px}
+.wl-card h2{font-family:var(--serif);font-size:28px;font-weight:400;line-height:1.1;letter-spacing:-.015em;margin-bottom:14px}
+.wl-card p{font-family:var(--serif);font-size:15px;color:var(--ink-2);margin-bottom:22px;line-height:1.55}
+.wl-card form{display:flex;gap:8px;flex-wrap:wrap}
+.wl-card input[type=email]{flex:1;min-width:200px;padding:11px 14px;border:1px solid var(--line-3);border-radius:2px;background:#fff;font-size:14px;font-family:var(--sans)}
+.wl-card input[type=email]:focus{outline:none;border-color:var(--dim-top)}
+.wl-card button[type=submit]{padding:11px 20px;background:var(--ink);color:var(--bg-paper);border-radius:2px;font-size:13px;font-weight:500;letter-spacing:-.005em;cursor:pointer;transition:background var(--t-fast)}
+.wl-card button[type=submit]:hover{background:var(--dim-top)}
+.wl-card #wl-status{margin-top:14px;font-family:var(--mono);font-size:10px;color:var(--ink-3);letter-spacing:.05em;line-height:1.6}
+.wl-card #wl-status a{color:var(--dim-top);border-bottom:1px dashed var(--dim-top);text-decoration:none}
+.wl-card .fine{margin-top:18px;font-family:var(--mono);font-size:9.5px;color:var(--ink-4);letter-spacing:.08em}
 
-/* =========================================================
-   PARAMETER BOARD · Slider row
-   ========================================================= */
-.paramboard{
-  margin-top:46px;
-  background:var(--bg-dark);
-  color:#ecdfc8;
-  border-radius:22px;
-  padding:36px 38px;
-  box-shadow:var(--shadow-deep);
-  position:relative;overflow:hidden;
-}
-.paramboard::before{
-  content:"";position:absolute;inset:0;
-  background:
-    radial-gradient(circle at 20% 0%,rgba(214,121,44,.18),transparent 55%),
-    radial-gradient(circle at 90% 100%,rgba(201,162,90,.08),transparent 55%);
-  pointer-events:none;
-}
-.paramboard *{position:relative;z-index:1}
-.paramboard .label{color:rgba(236,223,200,.5)}
-.paramboard h2{color:#fff;margin-bottom:8px}
-.paramboard .fb-sub{color:rgba(236,223,200,.65)}
-.paramboard .param-note{color:rgba(236,223,200,.45);font-family:var(--mono);font-size:.72rem;margin-top:8px;letter-spacing:.04em}
-
-.params{
-  display:grid;grid-template-columns:repeat(4,1fr);gap:22px;
-  margin-top:28px;
-}
-@media(max-width:860px){.params{grid-template-columns:repeat(2,1fr);gap:18px}}
-@media(max-width:500px){.params{grid-template-columns:1fr}}
-
-.param{background:rgba(255,255,255,.035);border:1px solid rgba(236,223,200,.1);border-radius:14px;padding:18px 20px 20px}
-.param .pname{font-family:var(--mono);font-size:.68rem;color:rgba(236,223,200,.65);text-transform:uppercase;letter-spacing:.14em;margin-bottom:4px}
-.param .pval{font-family:var(--serif);font-size:1.5rem;color:var(--copper-bright);font-weight:700;margin-bottom:12px}
-.param input[type=range]{
-  width:100%;height:24px;
-  -webkit-appearance:none;appearance:none;background:transparent;cursor:pointer
-}
-.param input[type=range]::-webkit-slider-runnable-track{
-  height:3px;background:linear-gradient(90deg,var(--copper-hot),rgba(236,223,200,.2));border-radius:2px
-}
-.param input[type=range]::-webkit-slider-thumb{
-  -webkit-appearance:none;appearance:none;
-  width:22px;height:22px;border-radius:50%;
-  background:radial-gradient(circle at 35% 30%,#ffd99a,var(--copper) 65%);
-  border:2px solid #2a2319;margin-top:-10px;
-  box-shadow:0 2px 6px rgba(0,0,0,.5),inset 0 -1px 2px rgba(0,0,0,.3);
-}
-.param input[type=range]::-moz-range-track{height:3px;background:linear-gradient(90deg,var(--copper-hot),rgba(236,223,200,.2));border-radius:2px}
-.param input[type=range]::-moz-range-thumb{
-  width:22px;height:22px;border-radius:50%;border:2px solid #2a2319;
-  background:radial-gradient(circle at 35% 30%,#ffd99a,var(--copper) 65%);
-  box-shadow:0 2px 6px rgba(0,0,0,.5),inset 0 -1px 2px rgba(0,0,0,.3);
-}
-.param .hint{margin-top:8px;font-size:.76rem;color:rgba(236,223,200,.45);line-height:1.45}
-
-/* =========================================================
-   FEATURE STRIP · Anti-Hero Claim
-   ========================================================= */
-.claimstrip{
-  margin-top:46px;display:grid;grid-template-columns:repeat(4,1fr);gap:14px;
-}
-@media(max-width:720px){.claimstrip{grid-template-columns:repeat(2,1fr)}}
-.claimcell{
-  background:var(--bg-panel);
-  border:1px solid var(--line);
-  border-radius:14px;
-  padding:20px 20px 22px;
-  box-shadow:var(--shadow-soft);
-}
-.claimcell .k{font-family:var(--serif);font-weight:700;font-size:2rem;color:var(--copper);margin-bottom:4px;line-height:1}
-.claimcell .lb{font-size:.82rem;color:var(--ink-1);margin-bottom:6px;font-weight:500}
-.claimcell .sb{font-family:var(--mono);font-size:.7rem;color:var(--ink-2);letter-spacing:.06em;line-height:1.5}
-
-/* =========================================================
-   WAITLIST · "Enter Garage" card
-   ========================================================= */
-.enter{
-  margin-top:60px;
-  background:linear-gradient(135deg,#fff8ea 0%,#f5e8c8 100%);
-  border:1px solid var(--copper-pale);
-  border-radius:22px;
-  padding:40px 40px 44px;
-  box-shadow:var(--shadow-raised);
-  position:relative;overflow:hidden;
-}
-.enter::before{
-  content:"";position:absolute;top:-40%;right:-10%;width:420px;height:420px;
-  border-radius:50%;
-  background:radial-gradient(circle,rgba(214,121,44,.18),transparent 60%);
-  pointer-events:none;
-}
-.enter .label{color:var(--copper)}
-.enter h2{margin:10px 0 10px;max-width:640px}
-.enter .ebody{color:var(--ink-1);max-width:600px;margin-bottom:28px;font-size:1rem}
-.enter form{display:flex;gap:10px;flex-wrap:wrap;align-items:stretch;max-width:640px}
-.enter input[type=email]{
-  flex:1;min-width:240px;padding:14px 20px;
-  background:var(--bg-panel);border:1px solid var(--line-strong);border-radius:12px;
-  color:var(--ink-0);font-size:1rem;font-family:var(--sans);
-  transition:border-color .15s,box-shadow .15s;
-}
-.enter input[type=email]:focus{outline:none;border-color:var(--copper);box-shadow:var(--glow-copper)}
-.enter .big-cta{padding:14px 28px;font-size:1rem}
-.enter .em-hint{margin-top:16px;font-family:var(--mono);font-size:.76rem;color:var(--ink-2);letter-spacing:.03em}
-.enter .em-hint a{color:var(--copper);border-bottom:1px dashed var(--copper)}
-.enter #wl-status{margin-top:14px;font-family:var(--mono);font-size:.78rem;color:var(--signal-green);min-height:20px;line-height:1.5}
-
-/* =========================================================
-   FOOTER
-   ========================================================= */
-footer{
-  margin-top:60px;padding:26px 30px;
-  background:var(--bg-panel);border:1px solid var(--line);border-radius:16px;
-  box-shadow:var(--shadow-soft);
-  font-family:var(--mono);font-size:.78rem;color:var(--ink-2);
-  line-height:1.7;
-  display:flex;flex-wrap:wrap;gap:22px;justify-content:space-between;align-items:center;
-}
-footer .crisis{color:var(--signal-red);font-size:.76rem}
-footer a{color:var(--ink-1);border-bottom:1px solid var(--line-strong)}
-footer a:hover{color:var(--copper);border-color:var(--copper)}
-
-/* =========================================================
-   PASSWORD GATE · minimal, matching warm palette
-   ========================================================= */
+/* ============================================================
+   PASSWORD GATE
+   ============================================================ */
 #gate{
   position:fixed;inset:0;z-index:9999;
   background:
-    radial-gradient(circle at 30% 20%,rgba(214,121,44,.15),transparent 55%),
-    radial-gradient(circle at 80% 80%,rgba(201,162,90,.14),transparent 55%),
-    linear-gradient(180deg,#f5efe4,#ebe2cc);
+    radial-gradient(ellipse 800px 600px at 50% 50%,#faf5e8,transparent 70%),
+    linear-gradient(180deg,var(--bg-paper),#e8dfc8);
   display:flex;align-items:center;justify-content:center;
   transition:opacity .7s ease,visibility .7s ease;
 }
 #gate.unlocked{opacity:0;visibility:hidden;pointer-events:none}
-#gate .gi{text-align:center;padding:30px;max-width:440px}
-#gate .gi .bulb{
-  display:inline-block;width:22px;height:22px;border-radius:50%;
-  background:radial-gradient(circle at 35% 30%,#ffd98a,var(--copper) 70%);
-  box-shadow:0 0 22px rgba(214,121,44,.55),inset 0 -1px 3px rgba(0,0,0,.25);
-  margin-bottom:22px;animation:flicker 4s ease-in-out infinite;
+#gate .inner{text-align:center;padding:30px;max-width:420px}
+#gate .mark{
+  width:10px;height:10px;border-radius:50%;background:var(--ink);
+  margin:0 auto 26px;
 }
-#gate h2{font-family:var(--mono);font-size:11px;letter-spacing:.32em;font-weight:400;color:var(--ink-2);text-transform:uppercase;margin:0 0 24px}
-#gate p.lead{font-family:var(--serif);font-size:1.05rem;color:var(--ink-1);line-height:1.55;margin:0 0 28px}
+#gate h2{font-family:var(--mono);font-size:10px;letter-spacing:.32em;font-weight:400;color:var(--ink-3);text-transform:uppercase;margin:0 0 18px}
+#gate p.lead{font-family:var(--serif);font-size:16px;color:var(--ink-2);line-height:1.5;margin:0 0 26px;font-weight:400}
 #gate input{
-  background:var(--bg-panel);border:1px solid var(--line-strong);
-  color:var(--ink-0);font-size:20px;padding:12px 18px;width:260px;border-radius:10px;
+  background:transparent;border:none;border-bottom:1px solid var(--ink-4);
+  color:var(--ink);font-size:20px;padding:10px 14px;width:240px;
   text-align:center;outline:none;font-family:var(--serif);letter-spacing:.12em;
-  box-shadow:var(--shadow-soft);
+  transition:border-color var(--t-fast);
 }
-#gate input:focus{border-color:var(--copper);box-shadow:var(--glow-copper)}
-#gate .hint{color:var(--ink-3);margin-top:14px;font-family:var(--mono);font-size:10px;letter-spacing:.2em}
-#gate .err{color:var(--signal-red);margin-top:12px;font-family:var(--mono);font-size:11px;min-height:14px;opacity:0;transition:opacity .25s;letter-spacing:.08em}
+#gate input:focus{border-bottom-color:var(--dim-top)}
+#gate .hint{color:var(--ink-4);margin-top:14px;font-family:var(--mono);font-size:9.5px;letter-spacing:.22em}
+#gate .err{color:var(--dim-right);margin-top:12px;font-family:var(--mono);font-size:10px;min-height:14px;opacity:0;transition:opacity .25s;letter-spacing:.06em}
 #gate .err.show{opacity:1}
-body.locked{overflow:hidden}
 
-/* Small-screen adjustments */
-@media(max-width:560px){
-  .wb-grid{grid-template-columns:repeat(2,1fr)}
-  .tile-profile,.tile-signal{grid-column:span 2}
-  .tile-dial{grid-column:span 2;flex-direction:row;justify-content:flex-start;gap:16px;min-height:auto;text-align:left}
-  .tile-dial .dial{margin-bottom:0}
-  .tile-rhythm{grid-column:span 2}
-  .crumbs{display:none}
+/* ============================================================
+   RESPONSIVE · small screens
+   ============================================================ */
+@media(max-width:760px){
+  :root{--edge-w:64px;--edge-h:52px;--edge-h-top:60px}
+  .top-stack{max-width:none;gap:0}
+  .layer{font-size:13px;padding:8px 2px 10px}
+  .layer .num{display:none}
+  .edge-top{padding:0 14px}
+  .edge-bottom{padding:0 14px}
+  .logo .sub{display:none}
+  .time,.detail{font-size:9.5px;padding:9px 0}
+  .action{padding:0 10px;font-size:12.5px}
+  .breadcrumb{font-size:9px;gap:6px}
+  .bottom-right{display:none}
+}
+@media(max-width:500px){
+  .top-right .beta-pill{display:none}
+  .breadcrumb{display:none}
 }
 </style>
 </head>
 <body class="locked">
 
-<!-- PASSWORD GATE -->
+<!-- ==================== GATE ==================== -->
 <div id="gate">
-  <div class="gi">
-    <div class="bulb"></div>
-    <h2>Self-Curator · Werkstatt · Beta</h2>
-    <p class="lead">Du hast den Link persönlich bekommen. Ein Wort — du kennst es aus unserer Mail, aus dem Gespräch, oder aus der Überschrift.</p>
+  <div class="inner">
+    <div class="mark"></div>
+    <h2>Self-Curator · Beta</h2>
+    <p class="lead">Ein Wort · du kennst es aus der Mail, dem Gespräch, oder der Überschrift.</p>
     <input type="password" id="pw" placeholder="·  ·  ·  ·  ·  ·" autofocus autocomplete="off" inputmode="text" spellcheck="false">
     <div class="hint">↵ enter</div>
     <div class="err" id="err">nicht korrekt</div>
   </div>
 </div>
 
-<div class="page">
+<!-- ==================== APP ==================== -->
+<div class="app" id="app" data-layer="0" data-time="14T" data-detail="S" data-action="">
 
-<!-- ============ TOP BAR ============ -->
-<nav class="topbar">
-  <div class="brand"><span class="brand-bulb"></span>Self-Curator<span class="brand-sub">werkstatt · beta</span></div>
-  <div class="crumbs">
-    <span class="active">Überblick</span><span>·</span><span>Werkzeuge</span><span>·</span><span>Feed</span><span>·</span><span>Parameter</span>
-  </div>
-  <div class="session-pill"><span class="dot"></span>Beta offen · 0/30</div>
-  <a href="#enter" class="cta-main">Zugang anfordern</a>
-</nav>
-
-<!-- ============ HERO · WORKBENCH + CLAIM ============ -->
-<section class="hero">
-
-  <div class="workbench">
-    <div class="wb-label">
-      <div class="mono">Deine Werkbank</div>
-      <div class="stripe"><i></i><i class="a"></i><i></i><i class="b"></i><i></i></div>
+  <!-- TOP · Ebenen-Leiter -->
+  <nav class="edge edge-top">
+    <div class="logo" data-goto="0">
+      <span class="dot"></span>Self-Curator<span class="sub">edge · beta</span>
     </div>
+    <div class="top-stack" role="tablist" aria-label="Ebene">
+      <button class="layer active" data-layer="0" role="tab" aria-selected="true"><span class="num">00</span>Überblick</button>
+      <button class="layer" data-layer="profil" role="tab"><span class="num">01</span>Profil</button>
+      <button class="layer" data-layer="signal" role="tab"><span class="num">02</span>Signal</button>
+      <button class="layer" data-layer="feed" role="tab"><span class="num">03</span>Feed</button>
+      <button class="layer" data-layer="tools" role="tab"><span class="num">04</span>Werkzeuge</button>
+      <button class="layer" data-layer="param" role="tab"><span class="num">05</span>Parameter</button>
+    </div>
+    <div class="top-right">
+      <div class="beta-pill" id="slot-count">Beta · 00/30</div>
+      <button class="cta" id="open-wl">Zugang anfordern</button>
+    </div>
+  </nav>
 
-    <div class="wb-grid">
+  <!-- LEFT · Zeit -->
+  <nav class="edge edge-left" aria-label="Zeit">
+    <div class="edge-label">Zeit · when</div>
+    <div class="time-stack">
+      <button class="time" data-time="H">Heute</button>
+      <button class="time" data-time="7T">7 T</button>
+      <button class="time active" data-time="14T">14 T</button>
+      <button class="time" data-time="30T">30 T</button>
+      <button class="time" data-time="ALL">Alles</button>
+    </div>
+  </nav>
 
-      <!-- HD-Profil -->
-      <div class="tile tile-profile">
-        <div class="tile-corner">HD · Profil</div>
-        <div class="hd-emblem"><span>6/2</span></div>
-        <div class="meta">
+  <!-- RIGHT · Detail -->
+  <nav class="edge edge-right" aria-label="Detail">
+    <div class="edge-label">Lens · detail</div>
+    <div class="detail-stack">
+      <button class="detail active" data-detail="S">Signal</button>
+      <button class="detail" data-detail="E">Erklär</button>
+      <button class="detail" data-detail="R">Roh</button>
+      <button class="detail" data-detail="X">Export</button>
+    </div>
+  </nav>
+
+  <!-- CENTER · Stage -->
+  <main class="stage" id="stage">
+
+    <div class="stage-micro" id="stage-micro"></div>
+
+    <!-- OVERVIEW · Layer 0 -->
+    <section class="view visible" data-view="0">
+      <div class="ov">
+
+        <div class="ov-claim">
+          <div class="micro">· Creator-Werkstatt · Walking MVP · 2035</div>
+          <h1>Ein Feed.<br>Vier <em>Ränder.</em><br>Ein Werkzeug.</h1>
+          <p class="lede">Bevor du postest: ein Rand berühren, und der Feed dreht sich unter dieser Frage. Rechts = Detail-Linse. Oben = Ebene. Links = Zeit. Unten = Aktion. Eins nach dem anderen.</p>
+          <div class="hints">
+            <div><b>·</b> Keine Push · keine Streaks · keine Community-Falle</div>
+            <div><b>·</b> Beta 6 Monate kostenlos · 30 Plätze · kein Referral</div>
+            <div><b>·</b> HD-basiert · EU-Hosting · ein-Klick-Export jederzeit</div>
+          </div>
+          <div class="kbd-hint">Versuch's: <span class="k">Tab</span> · <span class="k">←</span> <span class="k">→</span> wechseln · <span class="k">Esc</span> zurück</div>
+        </div>
+
+        <div class="ov-stage">
+          <div class="ov-card-head">
+            <span class="lbl">· dein Signal · heute</span>
+            <span class="now">MI · 10:42</span>
+          </div>
+
+          <div class="score-block">
+            <div class="score-big">77</div>
+            <div class="score-meta">
+              <div class="lb">Einzeiler</div>
+              <div class="val">Dein Rhythmus ist stabil · in 3 von 5 Posts dieser Woche zieht eine klare Signatur durch.</div>
+              <div class="delta">+4 ggü. letzter Woche</div>
+            </div>
+          </div>
+
+          <div class="ov-grid">
+            <div class="cell"><div class="lb">Konsistenz</div><div class="big">82</div><div class="sub">Signatur stabil</div></div>
+            <div class="cell"><div class="lb">Rhythmus</div><div class="big">71</div><div class="sub">leicht unter Base</div></div>
+            <div class="cell"><div class="lb">Kongruenz</div><div class="big">78</div><div class="sub">Profil ↔ Content</div></div>
+          </div>
+
+          <div class="ov-pulse">
+            <i style="height:40%"></i><i style="height:62%"></i><i style="height:32%"></i>
+            <i style="height:78%"></i><i class="hi" style="height:68%"></i><i style="height:50%"></i>
+            <i style="height:38%"></i><i class="hi" style="height:74%"></i><i style="height:60%"></i>
+            <i style="height:52%"></i><i class="hi" style="height:84%"></i><i style="height:28%"></i>
+            <i style="height:66%"></i><i class="hi" style="height:78%"></i>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- PROFIL · Layer 1 -->
+    <section class="view" data-view="profil">
+      <div class="profile-view">
+        <div class="hd-sig">
+          <div class="hd-disc">
+            <div class="core">
+              <span class="big">6/2</span>
+              <span class="lb">Generator</span>
+            </div>
+          </div>
           <div class="name">Dein Entwurf</div>
-          <div class="type">GENERATOR · 6/2 Profil</div>
-          <div class="auth">Emotional · Welle · warten · dann posten</div>
+          <div class="sub">Emotional · Welle · Splenic-neben-Authority</div>
+        </div>
+        <div class="hd-detail">
+          <h3>Authority · Entscheidungs-Gate</h3>
+          <div class="authority">Eine Nacht warten · Welle beobachten · erst dann posten.</div>
+          <p>Deine emotionale Authority braucht Zeit zwischen Impuls und Äußerung. Was sich heute klar anfühlt, ist morgen vielleicht eine andere Note. Deine Signatur entsteht in dieser Verzögerung.</p>
+
+          <h3>Strategie</h3>
+          <ul>
+            <li>Responsive statt initiativ<span>warte auf Ruf</span></li>
+            <li>Bauch-Response vor Kopf-Denken<span>Sacral-Zentrum aktiv</span></li>
+            <li>Kein Push · kein Pull<span>Flow</span></li>
+          </ul>
+
+          <h3>Signatur-Achsen</h3>
+          <ul>
+            <li>Grenzen als Selbstliebe<span>8 posts · 72% Resonanz</span></li>
+            <li>Rhythmus des Wartens<span>5 posts · 81% Resonanz</span></li>
+            <li>Kleine Mikroerzählungen<span>12 posts · 68% Resonanz</span></li>
+          </ul>
         </div>
       </div>
+    </section>
 
-      <!-- Signal-Ring -->
-      <div class="tile tile-signal">
-        <div class="tile-corner">Signal · heute</div>
-        <div class="signal-ring" style="--val:77;"><span>77</span></div>
-        <div class="txt">
-          <h3>Rhythmus stabil</h3>
-          <p>3 von 5 Soll-Posts · eine klare Signatur zieht durch die Woche.</p>
-        </div>
-      </div>
-
-      <!-- Dial 1 · Konsistenz -->
-      <div class="tile tile-dial">
-        <div class="label">Konsistenz</div>
-        <div class="dial" style="--deg:140deg">
-          <div class="dial-tick">
-            <i style="transform:translate(-50%,-100%) rotate(-135deg)"></i>
-            <i style="transform:translate(-50%,-100%) rotate(-90deg)"></i>
-            <i style="transform:translate(-50%,-100%) rotate(-45deg)"></i>
-            <i style="transform:translate(-50%,-100%) rotate(0deg)"></i>
-            <i style="transform:translate(-50%,-100%) rotate(45deg)"></i>
-            <i style="transform:translate(-50%,-100%) rotate(90deg)"></i>
-            <i style="transform:translate(-50%,-100%) rotate(135deg)"></i>
+    <!-- SIGNAL · Layer 2 -->
+    <section class="view" data-view="signal">
+      <div class="signal-view">
+        <div class="signal-main">
+          <div class="signal-dial-big">
+            <svg viewBox="0 0 100 100" aria-hidden="true">
+              <circle cx="50" cy="50" r="44" fill="none" stroke="rgba(26,24,19,.08)" stroke-width=".5"/>
+              <circle cx="50" cy="50" r="44" fill="none" stroke="var(--dim-top)" stroke-width=".8"
+                stroke-dasharray="276.46" stroke-dashoffset="63.58"
+                transform="rotate(-90 50 50)" stroke-linecap="round"/>
+            </svg>
+            <div class="core">
+              <span class="big">77</span>
+              <span class="lb">Signal · composite</span>
+            </div>
           </div>
-          <div class="needle"></div>
-          <div class="cap"></div>
+          <div class="signal-oneline">Dein Rhythmus ist stabil · in 3 von 5 Posts dieser Woche zieht eine klare Signatur durch.</div>
         </div>
-        <div class="val">82</div>
-        <div class="sub">Signatur stabil</div>
-      </div>
 
-      <!-- Dial 2 · Rhythmus -->
-      <div class="tile tile-dial">
-        <div class="label">Rhythmus</div>
-        <div class="dial" style="--deg:115deg">
-          <div class="dial-tick">
-            <i style="transform:translate(-50%,-100%) rotate(-135deg)"></i>
-            <i style="transform:translate(-50%,-100%) rotate(-90deg)"></i>
-            <i style="transform:translate(-50%,-100%) rotate(-45deg)"></i>
-            <i style="transform:translate(-50%,-100%) rotate(0deg)"></i>
-            <i style="transform:translate(-50%,-100%) rotate(45deg)"></i>
-            <i style="transform:translate(-50%,-100%) rotate(90deg)"></i>
-            <i style="transform:translate(-50%,-100%) rotate(135deg)"></i>
+        <div class="signal-breakdown">
+          <div class="sb-head">· Breakdown · 4 Achsen</div>
+          <div class="sb-row"><div class="nm">Konsistenz</div><div class="bar" style="--w:82%"></div><div class="v">82</div></div>
+          <div class="sb-row"><div class="nm">Rhythmus</div><div class="bar" style="--w:71%"></div><div class="v">71</div></div>
+          <div class="sb-row"><div class="nm">Kongruenz</div><div class="bar" style="--w:78%"></div><div class="v">78</div></div>
+          <div class="sb-row"><div class="nm">Timing</div><div class="bar" style="--w:68%"></div><div class="v">68</div></div>
+          <div class="sb-explain">
+            <b>Formel:</b> <code>M = ⁴√(K · R · T · S) · 100</code><br>
+            <b>Schatten-Flags:</b> 1 erkannt · Kompensations-Muster in Reel vom 2026-04-20<br>
+            <b>Parameter:</b> Rhythmus-Schärfe 0.72 · Zeitfenster 14 T · Authority-Gate AN
           </div>
-          <div class="needle"></div>
-          <div class="cap"></div>
         </div>
-        <div class="val">71</div>
-        <div class="sub">Leicht unter Baseline</div>
       </div>
+    </section>
 
-      <!-- Dial 3 · Kongruenz -->
-      <div class="tile tile-dial">
-        <div class="label">Kongruenz</div>
-        <div class="dial" style="--deg:130deg">
-          <div class="dial-tick">
-            <i style="transform:translate(-50%,-100%) rotate(-135deg)"></i>
-            <i style="transform:translate(-50%,-100%) rotate(-90deg)"></i>
-            <i style="transform:translate(-50%,-100%) rotate(-45deg)"></i>
-            <i style="transform:translate(-50%,-100%) rotate(0deg)"></i>
-            <i style="transform:translate(-50%,-100%) rotate(45deg)"></i>
-            <i style="transform:translate(-50%,-100%) rotate(90deg)"></i>
-            <i style="transform:translate(-50%,-100%) rotate(135deg)"></i>
+    <!-- FEED · Layer 3 -->
+    <section class="view" data-view="feed">
+      <div class="feed-view">
+        <div class="feed-head">
+          <h2>Deine Spur · <span id="feed-time">14 Tage</span></h2>
+          <div class="count"><span id="feed-count">6</span> Einträge · sortiert nach Signal</div>
+        </div>
+        <div class="feed-items">
+
+          <div class="post" data-post-score="88">
+            <div class="p-when">vor 11 T<br>21:10</div>
+            <div class="p-body">
+              <div class="p-text">Über Grenzen setzen und warum das wichtig ist heute. Eine Mikrogeschichte von Gestern Abend, die ich fast nicht posten wollte.</div>
+              <div class="p-meta"><span>IG</span><span>eigene-stimme</span><span>Authority ✓</span></div>
+            </div>
+            <div class="p-state go">GO<span class="score">88</span></div>
           </div>
-          <div class="needle"></div>
-          <div class="cap"></div>
+
+          <div class="post" data-post-score="82">
+            <div class="p-when">vor 2 T<br>14:30</div>
+            <div class="p-body">
+              <div class="p-text">Grenzen als Selbstliebe — ein persönlicher Rückblick auf die letzten drei Monate. Was ich heute schwerer sage als vor einem Jahr: Nein.</div>
+              <div class="p-meta"><span>IG</span><span>authentic</span><span>14D · 8 Kanäle</span></div>
+            </div>
+            <div class="p-state go">GO<span class="score">82</span></div>
+          </div>
+
+          <div class="post" data-post-score="79">
+            <div class="p-when">vor 6 T<br>18:00</div>
+            <div class="p-body">
+              <div class="p-text">Warum ich heute nicht geantwortet habe — und warum mir das schwerer fällt als ein langer Thread.</div>
+              <div class="p-meta"><span>LinkedIn</span><span>emotional-auth</span><span>Welle · geerdet</span></div>
+            </div>
+            <div class="p-state go">GO<span class="score">79</span></div>
+          </div>
+
+          <div class="post" data-post-score="61">
+            <div class="p-when">vor 13 T<br>07:30</div>
+            <div class="p-body">
+              <div class="p-text">So geht 2026 erfolgreicher Content: 5 Regeln, die jeder Creator kennen sollte. (Überschriften-Entwurf — was denkt ihr?)</div>
+              <div class="p-meta"><span>LinkedIn</span><span class="flag">◇ Validation-Hunger</span></div>
+            </div>
+            <div class="p-state refr">REFR.<span class="score">61</span></div>
+          </div>
+
+          <div class="post" data-post-score="58">
+            <div class="p-when">vor 4 T<br>09:15</div>
+            <div class="p-body">
+              <div class="p-text">10 Tipps für mehr Reichweite — warum diese Strategie auch in 2026 noch funktioniert. Der 4. Tipp hat alles verändert.</div>
+              <div class="p-meta"><span>IG</span><span class="flag">◇ Kompensations-Muster</span></div>
+            </div>
+            <div class="p-state refr">REFR.<span class="score">58</span></div>
+          </div>
+
+          <div class="post" data-post-score="34">
+            <div class="p-when">vor 9 T<br>11:42</div>
+            <div class="p-body">
+              <div class="p-text">fkt. noch nicht / draft / morgen nochmal lesen / zu schnell geschrieben / Welle noch nicht durch</div>
+              <div class="p-meta"><span>IG</span><span class="flag">◇ Authority-Gate: Welle aktiv</span></div>
+            </div>
+            <div class="p-state hold">HOLD<span class="score">34</span></div>
+          </div>
+
         </div>
-        <div class="val">78</div>
-        <div class="sub">Profil ↔ Content</div>
       </div>
+    </section>
 
-      <!-- Rhythm-Timeline -->
-      <div class="tile tile-rhythm">
-        <div class="head">
-          <h3>14-Tage-Puls</h3>
-          <div class="sub">Baseline: 4/Woche · Abweichung: -0.3σ</div>
-        </div>
-        <div class="timeline">
-          <div class="baseline"></div>
-          <div class="bar" style="height:30%"></div>
-          <div class="bar" style="height:55%"></div>
-          <div class="bar" style="height:22%"></div>
-          <div class="bar" style="height:70%"></div>
-          <div class="bar active" style="height:68%"></div>
-          <div class="bar" style="height:45%"></div>
-          <div class="bar" style="height:35%"></div>
-          <div class="bar active" style="height:72%"></div>
-          <div class="bar" style="height:60%"></div>
-          <div class="bar" style="height:50%"></div>
-          <div class="bar active" style="height:82%"></div>
-          <div class="bar" style="height:25%"></div>
-          <div class="bar" style="height:66%"></div>
-          <div class="bar active" style="height:78%"></div>
-        </div>
-        <div class="axis"><span>vor 14T</span><span>vor 7T</span><span>heute</span></div>
+    <!-- TOOLS · Layer 4 -->
+    <section class="view" data-view="tools">
+      <div class="tools-view">
+        <div class="tool"><div class="idx">01</div><h3>HD-Profil-Scanner</h3><p>Typ · Authority · Zentren · Kanäle. Kernstück · alles andere liest daraus.</p><div class="chips"><span class="live">· live</span><span>bodygraph-json</span></div></div>
+        <div class="tool"><div class="idx">02</div><h3>Signal-Composite</h3><p>K · R · T · S → ⁴√ · ein Wert mit ganzem Erklär-Pfad pro Klick.</p><div class="chips"><span class="live">· live</span><span>4 achsen</span></div></div>
+        <div class="tool"><div class="idx">03</div><h3>Pre-Post-Spiegel</h3><p>Draft → Shadow-Scan → Authority-Gate → GFK-Vorschlag. GO · REFRAME · HOLD.</p><div class="chips"><span class="live">· live</span><span>gfk · 4-schritt</span></div></div>
+        <div class="tool"><div class="idx">04</div><h3>Rhythmus-Tracker</h3><p>Posting-Kadenz lesen · nicht optimieren. Baseline pro HD-Typ.</p><div class="chips"><span class="live">· live</span><span>ig · linkedin</span></div></div>
+        <div class="tool"><div class="idx">05</div><h3>Shadow-Flagger</h3><p>Kompensations-Muster erkennen: Overpost · Leisepol · Validation-Hunger.</p><div class="chips"><span class="live">· live</span><span>7 typen</span></div></div>
+        <div class="tool"><div class="idx">06</div><h3>Parameter-Panel</h3><p>Jede Zahl einstellbar. Rhythmus-Schärfe · Shadow-Sens. · Zeitfenster.</p><div class="chips"><span class="live">· live</span><span>4 regler</span></div></div>
+        <div class="tool"><div class="idx">07</div><h3>Me-Time-Kippschalter</h3><p>Ein Knopf. Bis 3 Monate offline. Return without penalty.</p><div class="chips"><span class="live">· live</span></div></div>
+        <div class="tool"><div class="idx">08</div><h3>Feed-Lens</h3><p>Dein 14-Tage-Stream mit Signal-Profil · ohne Engagement-Vanity.</p><div class="chips"><span class="live">· live</span><span>scroll</span></div></div>
+        <div class="tool"><div class="idx">09</div><h3>Export & Graduation</h3><p>Deine Daten als JSON + PDF · ein Klick · jederzeit.</p><div class="chips"><span class="live">· live</span><span>zero-lockin</span></div></div>
+        <div class="tool"><div class="idx">10</div><h3>Matchmaking · Signal</h3><p>Anonymer Tausch zwischen Creatorinnen auf Muster-Ebene.</p><div class="chips"><span class="soon">· phase 1</span></div></div>
+        <div class="tool"><div class="idx">11</div><h3>Living-Feed-Mutation</h3><p>Dein Content über Plattformen ≠ eine Stimme. Mutations-Tracker.</p><div class="chips"><span class="soon">· phase 1</span></div></div>
+        <div class="tool"><div class="idx">12</div><h3>Peer-Review-Karten</h3><p>5/Woche · vertrauenswürdige Spiegelungen · ohne Sterne.</p><div class="chips"><span class="soon">· phase 2</span></div></div>
       </div>
+    </section>
 
+    <!-- PARAMETER · Layer 5 -->
+    <section class="view" data-view="param">
+      <div class="param-view">
+        <div class="param">
+          <div class="p-head"><div class="p-name">Rhythmus-Schärfe</div><div class="p-val" id="p1">0.72</div></div>
+          <input type="range" min="0" max="100" value="72" data-target="p1" data-scale="0.01">
+          <div class="hint">Wie stark Konsistenz zählt. Höher = strenger, niedriger = freier.</div>
+        </div>
+        <div class="param">
+          <div class="p-head"><div class="p-name">Shadow-Sensitivität</div><div class="p-val" id="p2">0.55</div></div>
+          <input type="range" min="0" max="100" value="55" data-target="p2" data-scale="0.01">
+          <div class="hint">Wie früh Kompensations-Flags gesetzt werden. Niedrig = nur bei starken Mustern.</div>
+        </div>
+        <div class="param">
+          <div class="p-head"><div class="p-name">Zeitfenster</div><div class="p-val" id="p3">14 T</div></div>
+          <input type="range" min="7" max="30" value="14" data-target="p3" data-suffix=" T">
+          <div class="hint">Wie viele Tage ins Score-Fenster eingehen. Kurz = reaktiv, lang = stabil.</div>
+        </div>
+        <div class="param">
+          <div class="p-head"><div class="p-name">Authority-Gate</div><div class="p-val" id="p4">AN</div></div>
+          <input type="range" min="0" max="1" value="1" data-target="p4" data-boolean>
+          <div class="hint">Emotional-Wellen-Warnung vor Post. Auf eigenes Risiko abschaltbar.</div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- BOTTOM · Action -->
+  <nav class="edge edge-bottom">
+    <div class="breadcrumb" id="breadcrumb">
+      <span class="seg current">Überblick</span>
     </div>
-  </div>
-
-  <div class="claim">
-    <div class="label" style="margin-bottom:14px">· Creator-Werkstatt · Walking MVP</div>
-    <h1>Bevor du postest: <em>lies dich selbst.</em></h1>
-    <p class="lede">Ein Werkzeug in der Form einer Werkbank. Human-Design-Profil, Signal-Dials, Feed-Stream, Parameter. Kein Feed-Algorithmus, den du überlisten musst. Du bist das Instrument — wir geben dir die Anzeigen.</p>
-    <div class="actionset">
-      <a href="#enter" class="big-cta">Beta-Zugang anfordern <span class="arrow">→</span></a>
-      <a href="#tools" class="secondary-cta">Werkzeuge ansehen</a>
+    <div class="action-stack">
+      <button class="action" data-action="draft">Draft prüfen</button>
+      <span class="sep"></span>
+      <button class="action" data-action="rewrite">Rewrite</button>
+      <span class="sep"></span>
+      <button class="action" data-action="export">Export</button>
+      <span class="sep"></span>
+      <button class="action" data-action="metime">Me-Time</button>
     </div>
-    <div class="micro">
-      <b>›</b> 30 Beta-Plätze · 6 Monate kostenlos<br>
-      <b>›</b> Keine Push, keine Streaks, keine Community<br>
-      <b>›</b> Export deiner Daten · 1 Klick · jederzeit<br>
-      <b>›</b> EU-Hosting · Zero-Knowledge für dein HD
+    <div class="bottom-right">
+      <span>· 2035 · edge-interface</span>
+      <span class="kbd">esc</span>
     </div>
-  </div>
-
-</section>
-
-<!-- ============ TOOL GRID · 9 Interface-Panels ============ -->
-<div class="section-head" id="tools">
-  <div>
-    <div class="label" style="margin-bottom:8px">· Werkzeug-Panel</div>
-    <h2>Alles verbunden. Eins sichtbar nach dem anderen.</h2>
-  </div>
-  <p>9 Werkzeuge · 3 Schichten Transparenz · max. 3 Klicks zu jedem Parameter. Keine Feature-Dusche — eine Werkbank, die denkt wie du denkst.</p>
-</div>
-
-<div class="toolgrid">
-
-  <div class="tool tool--featured">
-    <div class="tool-icon">◉</div>
-    <h3>HD-Profil-Scanner</h3>
-    <p>Typ · Authority · Zentren · Kanäle. Als Werkstück in der Mitte — alle anderen Tools lesen daraus.</p>
-    <div class="tool-meta">
-      <span class="chip live">live</span><span class="chip">BodyGraph-JSON</span><span class="chip">5 Typen</span>
-    </div>
-  </div>
-
-  <div class="tool">
-    <div class="tool-icon">⬢</div>
-    <h3>Signal-Composite</h3>
-    <p>Konsistenz · Rhythmus · Kongruenz · Timing — ⁴√ verrechnet zu einem Wert. Mit Erklär-Pfad.</p>
-    <div class="tool-meta">
-      <span class="chip live">live</span><span class="chip">4 Achsen</span><span class="chip">explain-chain</span>
-    </div>
-  </div>
-
-  <div class="tool">
-    <div class="tool-icon">≈</div>
-    <h3>Pre-Post-Spiegel</h3>
-    <p>Draft eingeben · Shadow-Scan · Authority-Gate · GFK-Rewrite-Vorschlag. GO · REFRAME · HOLD.</p>
-    <div class="tool-meta">
-      <span class="chip live">live</span><span class="chip">GFK-4-Schritt</span>
-    </div>
-  </div>
-
-  <div class="tool">
-    <div class="tool-icon">≡</div>
-    <h3>Rhythmus-Tracker</h3>
-    <p>Posting-Kadenz lesen · nicht optimieren. Baseline pro HD-Typ · Standard-Abweichung als Puls.</p>
-    <div class="tool-meta">
-      <span class="chip live">live</span><span class="chip">IG · LinkedIn</span>
-    </div>
-  </div>
-
-  <div class="tool">
-    <div class="tool-icon">△</div>
-    <h3>Shadow-Flagger</h3>
-    <p>Kompensations-Muster erkennen: Overpost · Leisepol · Validation-Hunger. Keine Diagnose — nur Flags.</p>
-    <div class="tool-meta">
-      <span class="chip live">live</span><span class="chip">7 Schatten-Typen</span>
-    </div>
-  </div>
-
-  <div class="tool">
-    <div class="tool-icon">⊞</div>
-    <h3>Parameter-Panel</h3>
-    <p>Jeden Score-Faktor selbst einstellen: Rhythmus-Schärfe · Shadow-Sensitivität · Zeitfenster. Live-Preview.</p>
-    <div class="tool-meta">
-      <span class="chip live">live</span><span class="chip">4 Regler</span>
-    </div>
-  </div>
-
-  <div class="tool">
-    <div class="tool-icon">◌</div>
-    <h3>Me-Time-Kippschalter</h3>
-    <p>Ein Knopf. Bis 3 Monate offline. Keine Scores · keine Mails · keine Streak-Strafe. Return without penalty.</p>
-    <div class="tool-meta">
-      <span class="chip live">live</span>
-    </div>
-  </div>
-
-  <div class="tool">
-    <div class="tool-icon">↯</div>
-    <h3>Feed-Stream</h3>
-    <p>Deine letzten 14 Posts mit live angezeigtem Signal-Profil. Ohne Engagement-Vanity · mit Signatur-Verlauf.</p>
-    <div class="tool-meta">
-      <span class="chip live">live</span><span class="chip">scrollable</span>
-    </div>
-  </div>
-
-  <div class="tool">
-    <div class="tool-icon">⊘</div>
-    <h3>Export & Graduation</h3>
-    <p>Deine Daten als JSON + PDF. Plus: Graduation-Path — wenn du nach 6 Monaten weniger postest, ist das Erfolg.</p>
-    <div class="tool-meta">
-      <span class="chip live">live</span><span class="chip">Zero-Lockin</span>
-    </div>
-  </div>
-
-  <div class="tool">
-    <div class="tool-icon">⊙</div>
-    <h3>Matchmaking · Signal</h3>
-    <p>Mit anderen Creatorinnen tauschen: anonym, nur auf Signal-Muster. Kein Gesicht · kein Follower-Count.</p>
-    <div class="tool-meta">
-      <span class="chip soon">Phase 1</span><span class="chip">privacy-first</span>
-    </div>
-  </div>
-
-  <div class="tool">
-    <div class="tool-icon">✦</div>
-    <h3>Living-Feed-Mutation</h3>
-    <p>Dein Content über Plattformen ≠ eine Message. Mutations-Tracker: wo driftest du, wo bleibst du dir treu.</p>
-    <div class="tool-meta">
-      <span class="chip soon">Phase 1</span><span class="chip">cross-platform</span>
-    </div>
-  </div>
-
-  <div class="tool">
-    <div class="tool-icon">⊛</div>
-    <h3>Peer-Review-Karten</h3>
-    <p>5 Karten pro Woche: vertrauenswürdige Menschen spiegeln dir dein Signal zurück. Ohne Sterne, ohne Ratings.</p>
-    <div class="tool-meta">
-      <span class="chip soon">Phase 2</span><span class="chip">kein Score</span>
-    </div>
-  </div>
+  </nav>
 
 </div>
 
-<!-- ============ FEED · Mockup Post-Stream ============ -->
-<div class="feedbox" id="feed">
-
-  <div class="fb-head">
-    <div>
-      <div class="label" style="margin-bottom:6px">· Dein Feed im Überblick</div>
-      <h2>14 Tage · deine eigene Spur</h2>
-      <p class="fb-sub">So sieht dein Stream in der App aus: jeder Post mit Signal-Profil, Shadow-Flags, Authority-Marker. Kein Like-Count · keine Reichweiten-Prahlerei.</p>
-    </div>
-    <div class="fb-controls">
-      <div class="fb-chip active">Alle</div>
-      <div class="fb-chip">Mit Shadow-Flag</div>
-      <div class="fb-chip">Niedrig Kongruenz</div>
-      <div class="fb-chip">Nur REFRAME</div>
-    </div>
+<!-- ==================== WAITLIST MODAL ==================== -->
+<div id="wl-modal">
+  <div class="wl-card">
+    <button class="wl-close" id="wl-close" aria-label="Schließen">×</button>
+    <div class="eyebrow">· Werkstatt betreten</div>
+    <h2>30 Plätze · 20 Minuten Gespräch · dann entscheiden wir beide.</h2>
+    <p>Du gibst deine Email. Ich schreibe dich an. Wir reden 20 Minuten — und wenn es passt, bist du im ersten Test-Batch. Wenn nicht, bekommst du trotzdem später Beta-Zugang.</p>
+    <form id="wl-form" onsubmit="return submitWL(event)">
+      <input type="email" name="email" placeholder="deine@email.de" required autofocus>
+      <button type="submit">Zugang anfordern →</button>
+    </form>
+    <div id="wl-status">Mail-Client öffnet sich nach Klick · du sendest, ich melde mich binnen 48h.</div>
+    <div class="fine">Alternativ direkt <a href="mailto:noiion828@gmail.com" style="color:var(--dim-top);border-bottom:1px dashed var(--dim-top);text-decoration:none">eine Mail schreiben</a> · EU-Hosting · du bleibst Autor deiner Daten.</div>
   </div>
-
-  <div class="feed">
-
-    <div class="post">
-      <div class="phead">
-        <div class="avatar">C</div>
-        <div>
-          <div class="who">Du · Instagram</div>
-          <div class="when">vor 2 Tagen · 14:30</div>
-        </div>
-        <div class="pstate ok">GO · 82</div>
-      </div>
-      <div class="ptext">Grenzen als Selbstliebe — ein persönlicher Rückblick auf die letzten drei Monate. Was ich heute schwerer sage als vor einem Jahr: Nein.</div>
-      <div class="pmeta">
-        <div class="score">Signal <b>82</b></div>
-        <div class="tag">#authentic</div>
-        <div class="tag">14D · 8 Kanäle</div>
-      </div>
-    </div>
-
-    <div class="post">
-      <div class="phead">
-        <div class="avatar">C</div>
-        <div>
-          <div class="who">Du · Instagram</div>
-          <div class="when">vor 4 Tagen · 09:15</div>
-        </div>
-        <div class="pstate warn">REFRAME · 58</div>
-      </div>
-      <div class="ptext">10 Tipps für mehr Reichweite — warum diese Strategie auch in 2026 noch funktioniert. Der 4. Tipp hat alles verändert.</div>
-      <div class="pmeta">
-        <div class="score">Signal <b>58</b></div>
-        <div class="tag">#growthhack</div>
-      </div>
-      <div class="shadow-note">◇ Shadow-Flag: Kompensation · Autorität ausgeliehen statt eigene</div>
-    </div>
-
-    <div class="post">
-      <div class="phead">
-        <div class="avatar">C</div>
-        <div>
-          <div class="who">Du · LinkedIn</div>
-          <div class="when">vor 6 Tagen · 18:00</div>
-        </div>
-        <div class="pstate ok">GO · 79</div>
-      </div>
-      <div class="ptext">Warum ich heute nicht geantwortet habe — und warum mir das schwerer fällt als ein langer Thread.</div>
-      <div class="pmeta">
-        <div class="score">Signal <b>79</b></div>
-        <div class="tag">#emotional-auth</div>
-        <div class="tag">Welle · geerdet</div>
-      </div>
-    </div>
-
-    <div class="post">
-      <div class="phead">
-        <div class="avatar">C</div>
-        <div>
-          <div class="who">Du · Instagram</div>
-          <div class="when">vor 9 Tagen · 11:42</div>
-        </div>
-        <div class="pstate hold">HOLD · 34</div>
-      </div>
-      <div class="ptext">fkt. noch nicht / draft / morgen nochmal lesen / zu schnell geschrieben / Welle noch nicht durch</div>
-      <div class="pmeta">
-        <div class="score">Signal <b>34</b></div>
-        <div class="tag">#draft</div>
-      </div>
-      <div class="shadow-note">◇ Authority-Gate: Emotional-Welle noch nicht abgelaufen · 1 Nacht warten</div>
-    </div>
-
-    <div class="post">
-      <div class="phead">
-        <div class="avatar">C</div>
-        <div>
-          <div class="who">Du · Instagram</div>
-          <div class="when">vor 11 Tagen · 21:10</div>
-        </div>
-        <div class="pstate ok">GO · 88</div>
-      </div>
-      <div class="ptext">Über Grenzen setzen und warum das wichtig ist heute. Eine Mikrogeschichte von Gestern Abend, die ich fast nicht posten wollte.</div>
-      <div class="pmeta">
-        <div class="score">Signal <b>88</b></div>
-        <div class="tag">#eigene-stimme</div>
-        <div class="tag">Authority ✓</div>
-      </div>
-    </div>
-
-    <div class="post">
-      <div class="phead">
-        <div class="avatar">C</div>
-        <div>
-          <div class="who">Du · LinkedIn</div>
-          <div class="when">vor 13 Tagen · 07:30</div>
-        </div>
-        <div class="pstate warn">REFRAME · 61</div>
-      </div>
-      <div class="ptext">So geht 2026 erfolgreicher Content: 5 Regeln, die jeder Creator kennen sollte. (Überschriften-Entwurf — was denkt ihr?)</div>
-      <div class="pmeta">
-        <div class="score">Signal <b>61</b></div>
-        <div class="tag">#meta-frage</div>
-      </div>
-      <div class="shadow-note">◇ Shadow-Flag: Validation-Hunger · Frage simuliert Dialog statt Entscheidung</div>
-    </div>
-
-  </div>
-</div>
-
-<!-- ============ PARAMETER BOARD · Dark workshop drawer ============ -->
-<div class="paramboard">
-  <div class="label">· Parameter-Schublade · Live-Preview</div>
-  <h2>Du justierst. Nicht wir.</h2>
-  <p class="fb-sub">Jede Zahl im System ist von dir einstellbar. Rhythmus zu streng? Shadow-Sensitivität zu hoch? Drehst du selbst. Keine Black-Box.</p>
-
-  <div class="params">
-
-    <div class="param">
-      <div class="pname">Rhythmus-Schärfe</div>
-      <div class="pval" id="p-rhythm">0.72</div>
-      <input type="range" min="0" max="100" value="72" data-target="p-rhythm" data-scale="0.01">
-      <div class="hint">Wie stark Konsistenz zählt. Höher = strenger, niedriger = freier.</div>
-    </div>
-
-    <div class="param">
-      <div class="pname">Shadow-Sensitivität</div>
-      <div class="pval" id="p-shadow">0.55</div>
-      <input type="range" min="0" max="100" value="55" data-target="p-shadow" data-scale="0.01">
-      <div class="hint">Wie früh Kompensations-Flags gesetzt werden. Niedrig = nur bei starken Mustern.</div>
-    </div>
-
-    <div class="param">
-      <div class="pname">Zeitfenster</div>
-      <div class="pval" id="p-window">14 T</div>
-      <input type="range" min="7" max="30" value="14" data-target="p-window" data-suffix=" T">
-      <div class="hint">Wie viele Tage ins Score-Fenster eingehen. Kurz = reaktiv, lang = stabil.</div>
-    </div>
-
-    <div class="param">
-      <div class="pname">Authority-Gate</div>
-      <div class="pval" id="p-auth">AN</div>
-      <input type="range" min="0" max="1" value="1" data-target="p-auth" data-boolean>
-      <div class="hint">Emotional-Wellen-Warnung vor Post. Kannst du ausschalten — auf eigenes Risiko.</div>
-    </div>
-
-  </div>
-  <div class="param-note">Alle Parameter werden pro User gespeichert · keine globalen Defaults · Reset-Button in der App.</div>
-</div>
-
-<!-- ============ CLAIM STRIP ============ -->
-<div class="claimstrip">
-  <div class="claimcell">
-    <div class="k">0</div>
-    <div class="lb">Push-Notifications</div>
-    <div class="sb">Keine. Nie. Du öffnest die App, wenn du willst.</div>
-  </div>
-  <div class="claimcell">
-    <div class="k">3</div>
-    <div class="lb">Klicks zu jedem Parameter</div>
-    <div class="sb">Transparenz als Struktur, nicht als Slogan.</div>
-  </div>
-  <div class="claimcell">
-    <div class="k">6 Mo</div>
-    <div class="lb">Beta kostenlos</div>
-    <div class="sb">Danach entscheidest du mit, was es wert ist.</div>
-  </div>
-  <div class="claimcell">
-    <div class="k">∞</div>
-    <div class="lb">Export-Freiheit</div>
-    <div class="sb">Deine Daten · JSON + PDF · ein Klick.</div>
-  </div>
-</div>
-
-<!-- ============ ENTER GARAGE · Waitlist ============ -->
-<section class="enter" id="enter">
-  <div class="label">· Werkstatt betreten</div>
-  <h2>30 Plätze · kein Referral-Bonus · keine Reihenfolgen-Spiele.</h2>
-  <p class="ebody">Du gibst deine Email. Ich schreibe dich an. Wir reden 20 Minuten — und wenn es passt, bist du im ersten Test-Batch. Wenn nicht, bekommst du trotzdem später Beta-Zugang.</p>
-
-  <form id="wl-form" onsubmit="return submitWaitlist(event)">
-    <input type="email" name="email" placeholder="deine@email.de" required>
-    <button type="submit" class="big-cta">Zugang anfordern <span class="arrow">→</span></button>
-  </form>
-
-  <div id="wl-status">Dein Mail-Client öffnet sich nach Klick — eine kurze Mail an mich, dann komme ich auf dich zu.</div>
-
-  <div class="em-hint">Lieber direkt ein Gespräch? <a href="mailto:noiion828@gmail.com?subject=Self-Curator%20Beta-Gespr%C3%A4ch">Schreib mir eine Mail</a> · 20 Min · unverbindlich · du bekommst später Beta egal wie das Gespräch läuft.</div>
-</section>
-
-<!-- ============ FOOTER ============ -->
-<footer>
-  <div>
-    <strong style="color:var(--ink-0);font-family:var(--serif);font-weight:600">Self-Curator · Werkstatt · Beta 2026</strong><br>
-    Ein Werkzeug · kein Therapie-Ersatz · kein Coaching · keine Diagnose.
-  </div>
-  <div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end">
-    <div><a href="mailto:noiion828@gmail.com">Kontakt</a> · <a href="https://github.com/noiion828-ui" target="_blank">Code</a> · <a href="#">Impressum</a></div>
-    <div class="crisis">In Krise? <a href="tel:08001110111" style="color:var(--signal-red)">0800-111-0-111</a> · <a href="https://krisenchat.de" style="color:var(--signal-red)">krisenchat.de</a></div>
-  </div>
-</footer>
-
 </div>
 
 <script>
-/* ============ PASSWORD GATE ============ */
+/* ============ GATE ============ */
 (function(){
-  const pw=document.getElementById('pw');
-  const gate=document.getElementById('gate');
-  const err=document.getElementById('err');
-  const SECRET='signal';
-  function unlock(){
-    gate.classList.add('unlocked');
-    document.body.classList.remove('locked');
-    err.classList.remove('show');
-    try{localStorage.setItem('sc_beta_unlocked','1')}catch(e){}
-    setTimeout(()=>{gate.style.display='none'},800);
-  }
-  function tryUnlock(){
-    if((pw.value||'').trim().toLowerCase()===SECRET){unlock()}
-    else{err.classList.add('show');pw.value=''}
-  }
-  pw.addEventListener('keydown',e=>{
-    if(e.key==='Enter')tryUnlock();
-    else err.classList.remove('show');
-  });
+  const pw=document.getElementById('pw'),gate=document.getElementById('gate'),err=document.getElementById('err'),SECRET='signal';
+  function unlock(){gate.classList.add('unlocked');document.body.classList.remove('locked');err.classList.remove('show');try{localStorage.setItem('sc_beta_unlocked','1')}catch(e){}setTimeout(()=>gate.style.display='none',800)}
+  pw.addEventListener('keydown',e=>{if(e.key==='Enter'){if((pw.value||'').trim().toLowerCase()===SECRET)unlock();else{err.classList.add('show');pw.value=''}}else err.classList.remove('show')});
   try{if(localStorage.getItem('sc_beta_unlocked')==='1')unlock()}catch(e){}
 })();
 
-/* ============ LIVE PARAMETER PREVIEW ============ */
+/* ============ STATE MACHINE · Edge Navigation ============ */
 (function(){
-  document.querySelectorAll('.param input[type=range]').forEach(range=>{
-    const target=document.getElementById(range.dataset.target);
-    const scale=range.dataset.scale?parseFloat(range.dataset.scale):null;
-    const suffix=range.dataset.suffix||'';
-    const boolean=range.hasAttribute('data-boolean');
-    range.addEventListener('input',()=>{
-      const v=parseInt(range.value,10);
-      if(boolean){target.textContent=v?'AN':'AUS'}
-      else if(scale!==null){target.textContent=(v*scale).toFixed(2)}
-      else{target.textContent=v+suffix}
-    });
+  const app=document.getElementById('app');
+  const micro=document.getElementById('stage-micro');
+  const breadcrumb=document.getElementById('breadcrumb');
+  const layers=document.querySelectorAll('.layer');
+  const views=document.querySelectorAll('.view');
+  const times=document.querySelectorAll('.time');
+  const details=document.querySelectorAll('.detail');
+  const actions=document.querySelectorAll('.action');
+
+  const LAYER_NAMES={0:'Überblick',profil:'Profil',signal:'Signal',feed:'Feed',tools:'Werkzeuge',param:'Parameter'};
+  const TIME_NAMES={H:'Heute',"7T":"7 Tage","14T":"14 Tage","30T":"30 Tage",ALL:"Alles"};
+  const DETAIL_NAMES={S:'Signal-Lens',E:'Erklär-Lens',R:'Roh-Daten',X:'Export-Lens'};
+  const ACTION_NAMES={draft:'Draft prüfen',rewrite:'Rewrite-Vorschlag',export:'Export starten',metime:'Me-Time aktivieren'};
+
+  const ACCENT={profil:'var(--dim-top)',signal:'var(--dim-top)',feed:'var(--dim-top)',tools:'var(--dim-top)',param:'var(--dim-top)','0':'var(--ink)'};
+
+  function setLayer(l){
+    app.dataset.layer=l;
+    layers.forEach(x=>x.classList.toggle('active',x.dataset.layer===l));
+    views.forEach(v=>v.classList.toggle('visible',v.dataset.view===l));
+    updateMicro();
+    updateBreadcrumb();
+  }
+  function setTime(t){
+    app.dataset.time=t;
+    times.forEach(x=>x.classList.toggle('active',x.dataset.time===t));
+    filterFeedByTime(t);
+    updateMicro();
+    updateBreadcrumb();
+  }
+  function setDetail(d){
+    app.dataset.detail=d;
+    details.forEach(x=>x.classList.toggle('active',x.dataset.detail===d));
+    updateMicro();
+  }
+  function setAction(a){
+    if(app.dataset.action===a){app.dataset.action='';actions.forEach(x=>x.classList.remove('active'));updateMicro();return}
+    app.dataset.action=a;
+    actions.forEach(x=>x.classList.toggle('active',x.dataset.action===a));
+    updateMicro();
+    if(a==='draft'||a==='rewrite')setTimeout(()=>setAction(a),2500); // placeholder: flash-show
+  }
+  function reset(){
+    setLayer('0');setTime('14T');setDetail('S');
+    app.dataset.action='';
+    actions.forEach(x=>x.classList.remove('active'));
+  }
+
+  function updateMicro(){
+    const l=app.dataset.layer,t=app.dataset.time,d=app.dataset.detail,a=app.dataset.action;
+    if(l==='0'&&!a){micro.classList.remove('on');micro.innerHTML='';return}
+    let parts=[];
+    if(l!=='0')parts.push(`<b>ebene</b> ${LAYER_NAMES[l]}`);
+    if(t!=='14T')parts.push(`<b>zeit</b> ${TIME_NAMES[t]}`);
+    if(d!=='S')parts.push(`<b>lens</b> ${DETAIL_NAMES[d]}`);
+    if(a)parts.push(`<b>aktion</b> ${ACTION_NAMES[a]}`);
+    micro.innerHTML='Du siehst · '+parts.join(' · ');
+    micro.classList.add('on');
+  }
+  function updateBreadcrumb(){
+    const l=app.dataset.layer,t=app.dataset.time;
+    if(l==='0'){breadcrumb.innerHTML='<span class="seg current">Überblick</span>';return}
+    const parts=['<span class="seg" data-reset>Überblick</span>','<span class="sep">›</span>','<span class="seg current">'+LAYER_NAMES[l]+'</span>'];
+    if(t!=='14T'){parts.push('<span class="sep">·</span>','<span class="seg">'+TIME_NAMES[t]+'</span>')}
+    breadcrumb.innerHTML=parts.join('');
+  }
+  function filterFeedByTime(t){
+    const label=document.getElementById('feed-time');if(label)label.textContent=TIME_NAMES[t];
+    const count=document.getElementById('feed-count');
+    const posts=document.querySelectorAll('.post');
+    let show=posts.length;
+    if(t==='H')show=0;
+    else if(t==='7T')show=3;
+    else if(t==='14T')show=6;
+    else if(t==='30T')show=6;
+    posts.forEach((p,i)=>p.style.display=i<show?'grid':'none');
+    if(count)count.textContent=show;
+  }
+
+  layers.forEach(l=>l.addEventListener('click',()=>setLayer(l.dataset.layer)));
+  times.forEach(t=>t.addEventListener('click',()=>setTime(t.dataset.time)));
+  details.forEach(d=>d.addEventListener('click',()=>setDetail(d.dataset.detail)));
+  actions.forEach(a=>a.addEventListener('click',()=>setAction(a.dataset.action)));
+
+  document.addEventListener('click',e=>{
+    if(e.target.dataset&&'goto'in e.target.dataset)setLayer(e.target.dataset.goto);
+    if(e.target.dataset&&'reset'in e.target.dataset)reset();
+  });
+
+  document.addEventListener('keydown',e=>{
+    if(document.getElementById('wl-modal').classList.contains('open'))return;
+    if(e.key==='Escape'){reset()}
+    else if(e.key==='ArrowLeft'||e.key==='ArrowRight'){
+      e.preventDefault();
+      const order=['0','profil','signal','feed','tools','param'];
+      const cur=order.indexOf(app.dataset.layer);
+      if(cur===-1)return;
+      const next=e.key==='ArrowLeft'?(cur-1+order.length)%order.length:(cur+1)%order.length;
+      setLayer(order[next]);
+    }
   });
 })();
 
-/* ============ CHIP FILTER (visual only in mockup) ============ */
-(function(){
-  document.querySelectorAll('.fb-chip').forEach(c=>{
-    c.addEventListener('click',()=>{
-      document.querySelectorAll('.fb-chip').forEach(x=>x.classList.remove('active'));
-      c.classList.add('active');
-    });
+/* ============ PARAM SLIDERS ============ */
+document.querySelectorAll('.param input[type=range]').forEach(r=>{
+  const t=document.getElementById(r.dataset.target);
+  const scale=r.dataset.scale?parseFloat(r.dataset.scale):null;
+  const suffix=r.dataset.suffix||'';
+  const boolean=r.hasAttribute('data-boolean');
+  r.addEventListener('input',()=>{
+    const v=parseInt(r.value,10);
+    t.textContent=boolean?(v?'AN':'AUS'):(scale!==null?(v*scale).toFixed(2):v+suffix);
   });
-})();
+});
 
-/* ============ WAITLIST · auto-mailto ============ */
-async function submitWaitlist(e){
+/* ============ WAITLIST MODAL ============ */
+const wlModal=document.getElementById('wl-modal'),wlClose=document.getElementById('wl-close');
+document.getElementById('open-wl').addEventListener('click',()=>wlModal.classList.add('open'));
+wlClose.addEventListener('click',()=>wlModal.classList.remove('open'));
+wlModal.addEventListener('click',e=>{if(e.target===wlModal)wlModal.classList.remove('open')});
+function submitWL(e){
   e.preventDefault();
-  const form=e.target;
-  const email=form.email.value.trim();
-  const status=document.getElementById('wl-status');
-  if(!email) return false;
+  const form=e.target,email=form.email.value.trim();
+  if(!email)return false;
   const list=JSON.parse(localStorage.getItem('sc_waitlist')||'[]');
   if(!list.includes(email)){list.push(email);localStorage.setItem('sc_waitlist',JSON.stringify(list))}
-  const subject=encodeURIComponent('Self-Curator Werkstatt · Beta-Anmeldung');
-  const body=encodeURIComponent('Hi,\n\nich würde gern in die Werkstatt-Beta.\n\nEmail: '+email+'\n\nWas mich gerade am Posten nervt:\n— \n\n(Kurz, wie du magst.)\n\n—');
+  const subject=encodeURIComponent('Self-Curator · Beta-Anmeldung');
+  const body=encodeURIComponent('Hi,\n\nich würde gern in die Beta.\n\nEmail: '+email+'\n\nWas mich am Posten gerade nervt:\n— \n\n(Kurz, wie du magst.)\n\n—');
   const mailto='mailto:noiion828@gmail.com?subject='+subject+'&body='+body;
-  status.innerHTML='<span style="color:var(--signal-green)">◉ Dein Mail-Client öffnet sich · bitte die Mail absenden, dann komme ich auf dich zu.</span><br><span style="color:var(--ink-2);font-size:.74rem">Falls nichts passiert: <a href="'+mailto+'" style="color:var(--copper);border-bottom:1px dashed var(--copper)">diesen Link klicken</a>.</span>';
+  const st=document.getElementById('wl-status');
+  st.innerHTML='<span style="color:var(--dim-bottom)">· Mail-Client öffnet sich</span> — falls nichts passiert: <a href="'+mailto+'">hier klicken</a>.';
   window.location.href=mailto;
   form.email.value='';
+  setTimeout(()=>wlModal.classList.remove('open'),1500);
   return false;
 }
 
-/* ============ LIVE SLOT COUNTER ============ */
+/* ============ SLOT COUNTER ============ */
 (function(){
   const wl=JSON.parse(localStorage.getItem('sc_waitlist')||'[]');
-  const pill=document.querySelector('.session-pill');
-  if(pill){const n=Math.max(0,Math.min(30,wl.length));pill.innerHTML='<span class="dot"></span>Beta offen · '+n+'/30'}
+  const el=document.getElementById('slot-count');
+  if(el){const n=String(Math.min(30,wl.length)).padStart(2,'0');el.textContent='Beta · '+n+'/30'}
 })();
 </script>
 </body>
