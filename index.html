@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Self-Curator · Signal statt Reichweite</title>
+<meta name="description" content="Ein Spiegel für Creator und Coaches. Human-Design-basiert. Radikal einfach. Beta kostenlos.">
+<meta property="og:title" content="Self-Curator · Signal statt Reichweite">
+<meta property="og:description" content="Wir helfen dir, dich selbst zu lesen · bevor dein nächster Post rausgeht.">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+<meta name="googlebot" content="noindex, nofollow">
+<style>
+:root{
+  --bg-0:#050609; --bg-1:#0b0d12; --bg-2:#12151e; --bg-3:#1b1f29;
+  --ink-0:#e9eef4; --ink-1:#b9c1cd; --ink-2:#7a8192; --ink-3:#4a5060;
+  --gold:#d4b86a; --gold-soft:#f2dd9a; --gold-deep:#9c8644;
+  --term:#6fd08a; --teal:#5fb7b3; --rose:#d18a8a;
+  --border:rgba(212,184,106,.16); --border-strong:rgba(212,184,106,.42);
+  --border-soft:rgba(255,255,255,.06);
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Inter,Roboto,sans-serif;
+  --shadow-1:0 1px 3px rgba(0,0,0,.4),0 6px 20px rgba(0,0,0,.2);
+  --shadow-glow:0 0 0 1px rgba(212,184,106,.28),0 8px 28px rgba(212,184,106,.14);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg-0);color:var(--ink-0);font-family:var(--sans);-webkit-font-smoothing:antialiased;line-height:1.6;font-size:16px}
+body{background:radial-gradient(ellipse at 20% -20%,rgba(212,184,106,.05),transparent 55%),radial-gradient(ellipse at 80% 120%,rgba(111,208,138,.04),transparent 50%),var(--bg-0)}
+a{color:var(--gold-soft);border-bottom:1px dashed rgba(242,221,154,.3);text-decoration:none}
+a:hover{color:var(--gold);border-bottom-style:solid}
+
+/* Container */
+.wrap{max-width:780px;margin:0 auto;padding:50px 28px 80px}
+
+/* Nav (minimal) */
+.nav{display:flex;align-items:center;gap:14px;padding-bottom:40px;border-bottom:1px solid var(--border-soft);margin-bottom:60px}
+.nav .brand{display:flex;align-items:center;gap:10px;font-family:var(--serif);font-size:1.02rem;font-weight:600;color:var(--gold-soft)}
+.nav .brand .dot{width:9px;height:9px;border-radius:50%;background:radial-gradient(circle at 30% 30%,var(--gold-soft),var(--gold-deep));box-shadow:var(--shadow-glow)}
+.nav .count{margin-left:auto;font-family:var(--mono);font-size:.76rem;color:var(--ink-2)}
+.nav .count .live-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--term);box-shadow:0 0 6px var(--term);margin-right:5px;vertical-align:middle;animation:p 2.4s infinite}
+@keyframes p{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* Hero */
+.hero h1{font-family:var(--serif);font-size:2.6rem;line-height:1.08;font-weight:600;margin:0 0 26px;letter-spacing:-.015em;color:var(--ink-0)}
+.hero h1 em{font-style:italic;color:var(--gold-soft)}
+.hero .lede{font-family:var(--serif);font-size:1.15rem;color:var(--ink-1);line-height:1.5;margin:0 0 28px;max-width:580px}
+.hero .cta-row{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:24px}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:999px;font-family:var(--sans);font-size:.95rem;font-weight:600;cursor:pointer;transition:transform .14s cubic-bezier(.2,.8,.2,1),box-shadow .18s;border:1px solid transparent;text-decoration:none}
+.btn:active{transform:scale(.97)}
+.btn-primary{background:linear-gradient(180deg,var(--gold-soft),var(--gold));color:var(--bg-0);box-shadow:0 2px 10px rgba(212,184,106,.28)}
+.btn-primary:hover{box-shadow:0 6px 22px rgba(212,184,106,.4);transform:translateY(-1px)}
+.btn-secondary{background:transparent;color:var(--ink-1);border-color:var(--border)}
+.btn-secondary:hover{border-color:var(--border-strong);color:var(--gold-soft);background:rgba(212,184,106,.04)}
+
+/* Sections */
+section{padding:36px 0;border-top:1px solid var(--border-soft)}
+section h2{font-family:var(--serif);font-size:1.5rem;font-weight:600;color:var(--gold-soft);margin:0 0 18px}
+section p{color:var(--ink-1);margin:0 0 14px}
+
+/* Friction box (Selbstselektions-Filter) */
+.friction{background:linear-gradient(135deg,rgba(122,196,212,.08),transparent);border:1px solid rgba(122,196,212,.25);border-radius:12px;padding:22px 26px;margin:30px 0;font-family:var(--serif);font-size:1.04rem;color:var(--ink-0);line-height:1.55}
+.friction strong{color:#7ac4d4}
+
+/* Demo-Moment */
+.demo{background:var(--bg-1);border:1px solid var(--border-soft);border-radius:14px;padding:28px 32px;margin:30px 0}
+.demo .demo-label{font-family:var(--mono);font-size:.72rem;color:var(--ink-3);text-transform:uppercase;letter-spacing:.16em;margin-bottom:20px}
+.demo .score-line{display:flex;align-items:baseline;gap:14px;margin-bottom:16px}
+.demo .score{font-family:var(--serif);font-size:3rem;font-weight:600;color:var(--gold-soft);line-height:1}
+.demo .score-lbl{font-size:.82rem;color:var(--ink-2);text-transform:uppercase;letter-spacing:.12em}
+.demo .one-liner{font-family:var(--serif);font-style:italic;color:var(--ink-0);margin:0 0 20px;font-size:1.04rem;line-height:1.5}
+.demo .chain{border-top:1px dashed var(--border-soft);padding-top:16px;font-family:var(--mono);font-size:.86rem;color:var(--ink-2);line-height:1.7;white-space:pre}
+.demo .chain .hi{color:var(--gold-soft)}
+.demo .chain .ok{color:var(--term)}
+.demo .chain .warn{color:var(--rose)}
+
+/* Testimonials · Ein-Satz-Format · Anti-Hype */
+.tm{display:flex;flex-direction:column;gap:16px;margin:20px 0}
+.tm-item{padding:14px 18px;background:var(--bg-1);border-left:2px solid var(--border-strong);border-radius:0 8px 8px 0;font-family:var(--serif);color:var(--ink-0)}
+.tm-item .tm-who{display:block;margin-top:6px;font-family:var(--sans);font-size:.82rem;color:var(--ink-2);font-style:normal}
+
+/* Pricing-Transparency · keine Tabelle · nur Wahrheit */
+.pricing-truth{background:var(--bg-1);border:1px solid var(--border-soft);border-radius:14px;padding:24px 28px;margin:20px 0}
+.pricing-truth h3{margin:0 0 10px;font-family:var(--serif);font-weight:600;color:var(--gold-soft);font-size:1.12rem}
+
+/* Waitlist form · minimal */
+.waitlist{padding:28px 32px;background:linear-gradient(180deg,rgba(212,184,106,.06),transparent);border:1px solid var(--border);border-radius:14px;margin:40px 0 20px}
+.waitlist h2{margin-top:0}
+.waitlist form{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.waitlist input[type=email]{flex:1;min-width:220px;padding:12px 16px;background:var(--bg-2);border:1px solid var(--border);border-radius:999px;color:var(--ink-0);font-family:var(--sans);font-size:.96rem}
+.waitlist input[type=email]:focus{outline:none;border-color:var(--border-strong);box-shadow:0 0 0 3px rgba(212,184,106,.1)}
+.waitlist .ts{margin-top:12px;font-family:var(--mono);font-size:.74rem;color:var(--ink-3)}
+
+/* Footer */
+footer{padding:40px 0 0;margin-top:40px;border-top:1px solid var(--border-soft);font-size:.82rem;color:var(--ink-3);font-family:var(--mono);line-height:1.7}
+footer a{color:var(--ink-2)}
+footer .crisis{margin-top:14px;padding:12px 16px;border-left:2px solid var(--rose);background:rgba(209,138,138,.04);border-radius:0 8px 8px 0;font-family:var(--sans);color:var(--ink-1);font-size:.82rem}
+
+/* Transparency-Strip (Stripe-DNA) */
+.transp-strip{display:flex;gap:4px;flex-wrap:wrap;padding:14px 0;margin:26px 0;border-top:1px dashed var(--border-soft);border-bottom:1px dashed var(--border-soft);font-family:var(--mono);font-size:.72rem;color:var(--ink-2)}
+.transp-strip .item{display:flex;align-items:center;gap:5px;padding:4px 10px}
+.transp-strip .item::before{content:"◉";color:var(--term);font-size:.7rem}
+
+/* Utility */
+.hide{display:none}
+@media(max-width:600px){.wrap{padding:30px 20px 60px}.hero h1{font-size:2rem}.demo{padding:20px 22px}.demo .score{font-size:2.4rem}}
+
+/* Password Gate · thematisch (Spiegel-Prinzip · ein Wort · kein Marketing) */
+#gate{position:fixed;inset:0;z-index:9999;background:radial-gradient(ellipse at center,#0b0d12 0%,#050609 100%);display:flex;align-items:center;justify-content:center;transition:opacity .7s ease,visibility .7s ease}
+#gate.unlocked{opacity:0;visibility:hidden;pointer-events:none}
+#gate .gi{text-align:center;padding:30px;max-width:420px}
+#gate .sym{font-family:var(--serif);font-size:54px;color:var(--gold-soft);margin-bottom:18px;letter-spacing:.04em;font-weight:600}
+#gate h2{font-family:var(--mono);font-size:11px;letter-spacing:.32em;font-weight:400;color:var(--ink-2);text-transform:uppercase;margin:0 0 26px}
+#gate p.lead{font-family:var(--serif);font-size:1rem;color:var(--ink-1);line-height:1.55;margin:0 0 28px}
+#gate input{background:transparent;border:none;border-bottom:1px solid var(--gold-deep);color:var(--ink-0);font-size:20px;padding:8px 12px;width:240px;text-align:center;outline:none;font-family:var(--serif);letter-spacing:.08em}
+#gate input:focus{border-bottom-color:var(--gold-soft)}
+#gate .hint{color:var(--ink-3);margin-top:14px;font-family:var(--mono);font-size:10px;letter-spacing:.2em}
+#gate .err{color:var(--rose);margin-top:10px;font-family:var(--mono);font-size:11px;min-height:14px;opacity:0;transition:opacity .25s}
+#gate .err.show{opacity:1}
+body.locked{overflow:hidden}
+</style>
+</head>
+<body class="locked">
+
+<div id="gate">
+  <div class="gi">
+    <div class="sym">·</div>
+    <h2>Self-Curator · Beta</h2>
+    <p class="lead">Du hast den Link von uns bekommen. Ein Wort · kleingeschrieben nicht nötig · hast du im Gespräch oder in der Mail gelesen.</p>
+    <input type="password" id="pw" placeholder="·  ·  ·  ·  ·  ·" autofocus autocomplete="off" inputmode="text" spellcheck="false">
+    <div class="hint">↵ enter</div>
+    <div class="err" id="err">nicht korrekt</div>
+  </div>
+</div>
+
+<div class="wrap">
+
+<!-- NAV · minimal -->
+<nav class="nav">
+  <div class="brand"><span class="dot"></span>Self-Curator</div>
+  <div class="count"><span class="live-dot"></span>Beta · 0 von 30 Plätzen</div>
+</nav>
+
+<!-- HERO · A/B-Variante 1 default (Variante 2 im HTML-Kommentar unten) -->
+<section class="hero" style="border-top:none;padding-top:0">
+  <h1>Signal statt Reichweite.<br><em>Ein Spiegel für Creator · nicht der nächste Algorithmus-Hack.</em></h1>
+
+  <p class="lede">Bevor dein nächster Post rausgeht, fragt ein schlichter Spiegel: <em>Stimmt der mit dir überein, heute?</em> &mdash; basierend auf deinem Human-Design. Kein Coaching, keine Community, keine Streaks. Nur eine Frage.</p>
+
+  <div class="cta-row">
+    <a class="btn btn-primary" href="#waitlist">Beta-Platz sichern</a>
+    <a class="btn btn-secondary" href="#how">Wie funktioniert's?</a>
+  </div>
+
+  <!-- Alternative Hero (Variante B für A/B-Test, aktivieren durch .hero-a.hide + .hero-b Sichtbar):
+       <h1>Wir helfen dir, <em>dich selbst zu lesen.</em></h1>
+       <p class="lede">Dein Posting-Rhythmus gelesen durch dein Human-Design. Wenn du gegen dich selbst postest, sehen wir das. Wenn du im Einklang bist, sehen wir das auch.</p>
+  -->
+</section>
+
+<!-- FRICTION · Selbstselektion · Anti-Hero-Copy (aus Nova-Gegenpol) -->
+<section>
+  <div class="friction">
+    <p style="margin:0"><strong>Bevor du weiterliest:</strong> dies ist <em>nicht</em> für dich, wenn du willst, dass jemand deine Reichweite verdoppelt. Es ist für dich, wenn du seit Monaten weißt, dass du zu viel, zu laut, zu oft postest — und es trotzdem tust, weil der Algorithmus nicht anders denkt.</p>
+  </div>
+</section>
+
+<!-- HOW · One powerful demo instead of feature-dusche -->
+<section id="how">
+  <h2>So sieht es aus · nicht mehr</h2>
+  <p>Ein Score. Ein Satz. Drei Klicks zur vollen Transparenz. Fertig.</p>
+
+  <div class="demo">
+    <div class="demo-label">Dein Dashboard · heute</div>
+    <div class="score-line">
+      <div class="score">77</div>
+      <div><div class="score-lbl">Signal heute</div></div>
+    </div>
+    <p class="one-liner">Dein Rhythmus ist stabil · in 3 von 5 Posts dieser Woche spürbarer Flow.</p>
+    <div class="chain"><span class="hi">◉ Wie entstand diese 77?</span>
+├─ Konsistenz  <span class="ok">82</span>   · Profil-Signatur stabil
+├─ Rhythmus    <span class="hi">71</span>   · 3/5 Soll-Posts · leicht unter Baseline
+└─ Kongruenz   <span class="ok">78</span>   · Content vs. Profil-Match
+
+<span class="warn">◇ Schatten-Flag</span> · Kompensations-Muster in 1 Reel
+
+<span class="ok">[ Parameter anpassen ]  [ Me-Time einstellen ]  [ Export ]</span></div>
+  </div>
+</section>
+
+<!-- TRANSPARENZ-STRIP · Stripe-DNA · kurze Vertrauens-Anker -->
+<div class="transp-strip">
+  <div class="item">Jeder Score hat einen Erklär-Button</div>
+  <div class="item">Parameter kannst du selbst einstellen</div>
+  <div class="item">Daten-Export jederzeit</div>
+  <div class="item">Me-Time · 1 Klick · bis 3 Monate</div>
+  <div class="item">EU-Hosting · Zero-Knowledge für HD-Chart</div>
+  <div class="item">Beta kostenlos · ehrlich, kein Dark-Pattern</div>
+</div>
+
+<!-- WAS DIES NICHT IST · Anti-Hero-Integrität -->
+<section>
+  <h2>Was dies nicht ist</h2>
+  <p>Wir haben keinen Content-Automation-Hook. Kein Wachstums-Versprechen. Keine 10x-Formel. Keine Community, in die du dich verlieren kannst.</p>
+  <p>Wir spiegeln. Du entscheidest. Wenn du 4 Wochen nach Beta-Start weniger postest, zufriedener bist und uns nicht mehr öffnest — <strong>ist das ein Erfolg</strong>. Unser Graduation-Path beginnt am ersten Tag.</p>
+</section>
+
+<!-- TESTIMONIALS · EIN-SATZ · ANTI-HYPE (platzhalter · realer Text nach Pilot) -->
+<section>
+  <h2>Ein-Satz-Stimmen aus der Beta · kommt bald</h2>
+  <div class="tm">
+    <div class="tm-item">[Pilot-Stimme in Woche 2 hier · echt · ein Satz]<span class="tm-who">— Name, Region, Plattform</span></div>
+    <div class="tm-item">[Pilot-Stimme in Woche 4 hier · auch kritische Nuance · kein Marketing-Gloss]<span class="tm-who">— Name, Region, Plattform</span></div>
+    <div class="tm-item">[Pilot-Stimme Monat 2 hier · inklusive Graduation-Moment wenn eintritt]<span class="tm-who">— Name, Region, Plattform</span></div>
+  </div>
+  <p class="ts" style="font-family:var(--mono);font-size:.76rem;color:var(--ink-3);margin-top:14px">Bis dahin: nichts Generisches. Wir lügen dich nicht mit Carousels voll.</p>
+</section>
+
+<!-- PREIS-TRANSPARENZ (kein Preis für Pilot · ehrlich) -->
+<section>
+  <div class="pricing-truth">
+    <h3>Was kostet es?</h3>
+    <p style="margin:0">Beta ist kostenlos · 6 Monate · alle Funktionen. Danach: wir wissen es noch nicht. Wir haben interne Hypothesen (49€/Mo · transparente Unit-Economics · ~70% Margin), aber <strong>wir weigern uns, einen Preis festzulegen, bevor wir wissen, was das Werkzeug wirklich wert ist</strong>.</p>
+    <p style="margin:12px 0 0">Wenn du in der Beta bist, entscheidest du mit.</p>
+  </div>
+</section>
+
+<!-- WAITLIST · minimal · keine Referral-Gamification -->
+<section class="waitlist" id="waitlist">
+  <h2>Auf der Beta-Liste</h2>
+  <p>30 Plätze · keine Referral-Boni · keine Reihenfolgen-Manipulation. Du gibst deine Email, ich schreibe dich an, wir reden 20 Minuten, und dann entscheide ich (und du) ob du im ersten Test-Batch dabei bist.</p>
+
+  <form id="wl-form" onsubmit="return submitWaitlist(event)">
+    <input type="email" name="email" placeholder="deine@email.de" required>
+    <button type="submit" class="btn btn-primary">Email senden</button>
+  </form>
+
+  <div class="ts" id="wl-status">Warten auf deine Email · wird nicht weitergegeben · nur für Beta-Einladung genutzt.</div>
+
+  <p style="margin-top:20px;font-size:.88rem;color:var(--ink-2)">Wenn du stattdessen direkt ein Gespräch willst (20 Min, unverbindlich, du bekommst später Beta-Zugang egal was wir besprechen): <a href="mailto:noiion828@gmail.com?subject=Self-Curator%20Beta-Gespr%C3%A4ch">schreib mir direkt</a>.</p>
+</section>
+
+<footer>
+  <div>Self-Curator · Beta · 2026</div>
+  <div style="margin-top:6px">Ein Werkzeug · kein Therapie-Ersatz · kein Coaching · keine Diagnose.</div>
+  <div class="crisis">In Krise? Framework ist kein Ersatz für menschliche Hilfe. <a href="tel:08001110111" style="color:var(--rose);border:none">Telefonseelsorge 0800-111-0-111</a> · <a href="https://krisenchat.de" style="color:var(--rose);border:none">krisenchat.de</a></div>
+  <div style="margin-top:16px;font-size:.76rem">
+    Gebaut mit Apple-Dark · Hackertron-softer · ehrlich getested · 100-Persona-Stress bestanden (nach 2. Runde).<br>
+    <a href="mailto:noiion828@gmail.com">Kontakt</a> · <a href="https://github.com/noiion828-ui" target="_blank">Code</a> · <a href="#">Impressum</a>
+  </div>
+</footer>
+
+</div>
+
+<script>
+/* ============ PASSWORD GATE ============ */
+(function(){
+  const pw=document.getElementById('pw');
+  const gate=document.getElementById('gate');
+  const err=document.getElementById('err');
+  const SECRET='signal';
+  function unlock(){
+    gate.classList.add('unlocked');
+    document.body.classList.remove('locked');
+    err.classList.remove('show');
+    try{localStorage.setItem('sc_beta_unlocked','1')}catch(e){}
+    setTimeout(()=>{gate.style.display='none'},800);
+  }
+  function tryUnlock(){
+    if((pw.value||'').trim().toLowerCase()===SECRET){unlock()}
+    else{err.classList.add('show');pw.value=''}
+  }
+  pw.addEventListener('keydown',e=>{
+    if(e.key==='Enter')tryUnlock();
+    else err.classList.remove('show');
+  });
+  try{if(localStorage.getItem('sc_beta_unlocked')==='1')unlock()}catch(e){}
+})();
+
+async function submitWaitlist(e){
+  e.preventDefault();
+  const form = e.target;
+  const email = form.email.value.trim();
+  const status = document.getElementById('wl-status');
+  if(!email) return false;
+  // Save locally (fuer Live-Counter) + mailto zu Owner
+  const list = JSON.parse(localStorage.getItem('sc_waitlist') || '[]');
+  if(!list.includes(email)){
+    list.push(email);
+    localStorage.setItem('sc_waitlist', JSON.stringify(list));
+  }
+  const subject = encodeURIComponent('Self-Curator Beta · Anmeldung');
+  const body = encodeURIComponent('Hi,\n\nich würde gern in die Beta.\n\nEmail: ' + email + '\n\n(Kurz schreiben wenn du magst: was nervt dich am Posten?)\n\n—');
+  const mailto = 'mailto:noiion828@gmail.com?subject=' + subject + '&body=' + body;
+  status.innerHTML = '<span style="color:var(--term)">◉ Dein Mail-Client öffnet sich · schick die Mail einfach ab, dann komme ich auf dich zu.</span><br><span style="font-size:.82rem">Falls nichts passiert: <a href="' + mailto + '">diesen Link klicken</a>.</span>';
+  // Auto-open Mail-Client
+  window.location.href = mailto;
+  form.email.value = '';
+  return false;
+}
+// Live-Count-Update
+const wl = JSON.parse(localStorage.getItem('sc_waitlist') || '[]');
+const countEl = document.querySelector('.nav .count');
+if(countEl){
+  const n = Math.max(0, Math.min(30, wl.length));
+  countEl.innerHTML = '<span class="live-dot"></span>Beta · ' + n + ' von 30 Plätzen';
+}
+</script>
+</body>
+</html>
